@@ -3,6 +3,7 @@ import { useAuth } from "./auth/AuthContext.jsx";
 import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import DocumentView from "./pages/DocumentView.jsx";
+import NewF4 from "./pages/NewF4.jsx";
 import Chatbot from "./components/Chatbot.jsx";
 
 function Protected({ children }) {
@@ -22,6 +23,14 @@ export default function App() {
           element={
             <Protected>
               <Dashboard />
+            </Protected>
+          }
+        />
+        <Route
+          path="/f4/nova"
+          element={
+            <Protected>
+              <NewF4 />
             </Protected>
           }
         />

@@ -149,6 +149,202 @@ button.ghost {
   border-color: #efc32c;
 }
 
+.doc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.button-like {
+  display: inline-block;
+  background: #efc32c;
+  color: #1a1a1a;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  text-decoration: none;
+}
+
+.ghost.button-like {
+  background: transparent;
+  border: 1px solid #ccc;
+  font-weight: 400;
+}
+
+/* Badges de status */
+.badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: #eee;
+  white-space: nowrap;
+}
+
+.badge.draft {
+  background: #e8e8e8;
+  color: #555;
+}
+.badge.review {
+  background: #fdf0c8;
+  color: #8a6d00;
+}
+.badge.signed {
+  background: #dff3e4;
+  color: #1e7a3c;
+}
+.badge.late {
+  background: #fdecea;
+  color: #c0392b;
+}
+
+/* Métricas */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.7rem;
+  margin: 1rem 0;
+}
+
+.metric {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.metric-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.metric-alert {
+  border-left: 4px solid #c0392b;
+}
+
+/* Filtros */
+.filters {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.filters input {
+  flex: 1;
+}
+
+.filters input,
+.filters select {
+  padding: 0.55rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+}
+
+/* Barra de conclusão */
+.progress {
+  height: 6px;
+  background: #eee;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 0.35rem 0 0.15rem;
+}
+
+.progress div {
+  height: 100%;
+  background: #efc32c;
+}
+
+/* Formulário F4 */
+.form-page {
+  max-width: 900px;
+}
+
+.form-page fieldset {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin: 0 0 1rem;
+  padding: 1rem 1.2rem 1.2rem;
+}
+
+.form-page legend {
+  font-weight: 700;
+  padding: 0 0.4rem;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.field.span-2 {
+  grid-column: span 2;
+}
+.field.span-3 {
+  grid-column: span 3;
+}
+
+.field-inline {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.field input,
+.field select,
+.field textarea {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font: inherit;
+  background: #fff;
+}
+
+.field-inline input {
+  width: auto;
+}
+
+.req {
+  color: #c0392b;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding-bottom: 2rem;
+}
+
+@media (max-width: 640px) {
+  .field-grid {
+    grid-template-columns: 1fr;
+  }
+  .field.span-2,
+  .field.span-3 {
+    grid-column: span 1;
+  }
+}
+
 /* PDF */
 .pdf-viewer {
   display: flex;
