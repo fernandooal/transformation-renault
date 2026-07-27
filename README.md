@@ -16,7 +16,7 @@ Aplicação web (DEMO) para o projeto de gestão da documentação **F4** — te
 
 | Camada    | Tecnologias |
 |-----------|-------------|
-| Backend   | Node.js, Express, jsonwebtoken, bcryptjs, SDK de LLM |
+| Backend   | Node.js, Express, jsonwebtoken, bcryptjs, API Google Gemini |
 | Frontend  | React 18, Vite, react-router-dom, react-pdf |
 | Dados     | JSON em arquivo (`backend/data/users.json`, criado automaticamente) |
 
@@ -36,7 +36,7 @@ Pré-requisito: Node.js 18+.
 ```sh
 cd backend
 npm install
-cp .env.example .env   # preencha a chave da API de LLM e um JWT_SECRET próprio
+cp .env.example .env   # preencha a GEMINI_API_KEY e um JWT_SECRET próprio
 npm run dev            # API em http://localhost:3001
 ```
 

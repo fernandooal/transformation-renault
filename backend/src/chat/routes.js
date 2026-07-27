@@ -1,6 +1,5 @@
 import { Router } from "express";
-import Anthropic from "@anthropic-ai/sdk";
-import { chat, validateMessages } from "./chat.js";
+import { chat, validateMessages, ChatError } from "./chat.js";
 import { requireAuth, requireRole } from "../auth/middleware.js";
 
 export function chatRouter() {
@@ -16,16 +15,17 @@ export function chatRouter() {
       const reply = await chat(req.body.messages);
       return res.json({ reply });
     } catch (error) {
-      const missingKey = /authentication method|api key/i.test(error?.message ?? "");
-      if (error instanceof Anthropic.AuthenticationError || missingKey) {
-        console.error("ANTHROPIC_API_KEY inválida ou ausente.");
-        return res.status(500).json({ error: "Chatbot indisponível no momento." });
-      }
-      if (error instanceof Anthropic.RateLimitError) {
-        return res.status(429).json({ error: "Muitas requisições. Tente novamente em instantes." });
-      }
-      if (error instanceof Anthropic.APIConnectionError) {
-        return res.status(502).json({ error: "Falha de conexão com o serviço de IA." });
+      if (error instanceof ChatError) {
+        console.error(`[chat] ${error.code}: ${error.message}`);
+        switch (error.code) {
+          case "missing_key":
+          case "auth":
+            return res.status(500).json({ error: "Chatbot indisponível no momento." });
+          case "rate_limit":
+            return res.status(429).json({ error: "Muitas requisições. Tente novamente em instantes." });
+          default:
+            return res.status(502).json({ error: "Falha de conexão com o serviço de IA." });
+        }
       }
       console.error("Erro no chatbot:", error);
       return res.status(500).json({ error: "Erro interno no chatbot." });
