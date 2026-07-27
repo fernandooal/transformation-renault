@@ -4,16 +4,18 @@ import { api } from "../api.js";
 import { useAuth } from "../auth/AuthContext.jsx";
 
 const STATUS_CLASS = {
-  Rascunho: "draft",
-  "Em aprovação": "review",
-  Assinado: "signed",
-  Atrasado: "late",
+  Draft: "draft",
+  "In approval": "review",
+  Signed: "signed",
+  Late: "late",
 };
 
-const brl = (value) =>
+const STATUSES = ["Todos", "Draft", "In approval", "Signed", "Late"];
+
+const money = (value, currency = "EUR") =>
   new Intl.NumberFormat("pt-BR", {
     style: "currency",
-    currency: "BRL",
+    currency,
     maximumFractionDigits: 0,
   }).format(value || 0);
 
@@ -65,7 +67,7 @@ export default function Dashboard() {
           <div>
             <h2>Documentos F4</h2>
             <p className="muted small">
-              Termos contratuais de compra de materiais com terceiros.
+              F4 sheet — Cost of Modification. Modificações contratuais com fornecedores.
             </p>
           </div>
           <Link to="/f4/nova" className="button-like">
@@ -80,8 +82,8 @@ export default function Dashboard() {
               <span className="muted small">F4 ativas</span>
             </div>
             <div className="metric">
-              <span className="metric-value">{brl(metrics.totalValue)}</span>
-              <span className="muted small">Valor contratado</span>
+              <span className="metric-value">{money(metrics.totalValue)}</span>
+              <span className="muted small">Impacto total</span>
             </div>
             <div className="metric">
               <span className="metric-value">{metrics.avgCompletion}%</span>
@@ -100,12 +102,12 @@ export default function Dashboard() {
 
         <div className="filters">
           <input
-            placeholder="Buscar por título, fornecedor ou contrato..."
+            placeholder="Buscar por título, fornecedor ou ECO ID..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
           <select value={status} onChange={(e) => setStatus(e.target.value)}>
-            {["Todos", "Rascunho", "Em aprovação", "Assinado", "Atrasado"].map((s) => (
+            {STATUSES.map((s) => (
               <option key={s}>{s}</option>
             ))}
           </select>
@@ -124,16 +126,16 @@ export default function Dashboard() {
                   </span>
                 </div>
                 <span className="muted small">
-                  {doc.supplier} · {doc.contract} · {doc.version} · {brl(doc.value)} · prazo{" "}
+                  {doc.supplier} · {doc.contract} · {doc.version} · {doc.vehicles} · {money(doc.value, doc.currency)} · prazo{" "}
                   {doc.deadline}
-                  {doc.dependsOn?.length > 0 && ` · depende de F4 #${doc.dependsOn.join(", #")}`}
+                  {doc.dependsOn?.length > 0 && ` · depende da F4 #${doc.dependsOn.join(", #")}`}
                 </span>
                 <div className="progress" title={`${doc.completion}% concluído`}>
                   <div style={{ width: `${doc.completion}%` }} />
                 </div>
                 <span className="muted small">
                   {doc.completion}% concluído · {doc.owner} · atualizado em {doc.updatedAt}
-                  {doc.signed ? " · ✔ assinado digitalmente" : ""}
+                  {doc.signed ? " · assinado digitalmente" : ""}
                 </span>
               </Link>
             </li>
