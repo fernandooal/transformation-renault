@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+*.log
+
+# runtime data
+backend/data/users.json
+
+# arquivos de assistente de IA (não versionar)
+CLAUDE.md
+.claude/
