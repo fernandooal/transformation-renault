@@ -1,4 +1,15 @@
-/* Renault Transformation Day — estilo mínimo da DEMO (preto/amarelo Renault) */
+/* Renault Transformation Day — DEMO. Paleta monocromática (escala de cinza). */
+:root {
+  --ink: #111111;
+  --ink-2: #3a3a3a;
+  --ink-3: #6b6b6b;
+  --line: #d8d8d8;
+  --line-strong: #9a9a9a;
+  --surface: #ffffff;
+  --surface-2: #f2f2f2;
+  --bg: #ebebeb;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -6,16 +17,17 @@
 body {
   margin: 0;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background: #f5f5f5;
-  color: #1a1a1a;
+  background: var(--bg);
+  color: var(--ink);
 }
 
 h1 span {
-  color: #efc32c;
+  color: var(--ink-3);
+  font-weight: 400;
 }
 
 .muted {
-  color: #666;
+  color: var(--ink-3);
 }
 
 .small {
@@ -23,30 +35,51 @@ h1 span {
 }
 
 .error {
-  color: #c0392b;
+  color: var(--ink);
+  font-weight: 600;
+  background: var(--surface-2);
+  border-left: 3px solid var(--ink);
+  padding: 0.5rem 0.75rem;
 }
 
 button {
   cursor: pointer;
-  border: none;
-  border-radius: 6px;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
   padding: 0.6rem 1rem;
-  background: #efc32c;
-  color: #1a1a1a;
+  background: var(--ink);
+  color: #fff;
   font-weight: 600;
 }
 
+button:hover {
+  background: var(--ink-2);
+}
+
 button:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
 button.ghost {
   background: transparent;
-  border: 1px solid #ccc;
+  border: 1px solid var(--line-strong);
+  color: inherit;
   font-weight: 400;
   text-decoration: none;
-  color: inherit;
+}
+
+button.ghost:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
 }
 
 /* Login */
@@ -55,13 +88,13 @@ button.ghost {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #1a1a1a;
+  background: var(--ink);
 }
 
 .login-card {
-  background: #fff;
+  background: var(--surface);
   padding: 2rem;
-  border-radius: 10px;
+  border-radius: 6px;
   width: 340px;
   display: flex;
   flex-direction: column;
@@ -82,19 +115,19 @@ button.ghost {
 
 .login-card input {
   padding: 0.55rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
 }
 
 /* Layout */
 .page main {
-  max-width: 900px;
+  max-width: 980px;
   margin: 1.5rem auto;
   padding: 0 1rem;
 }
 
 .topbar {
-  background: #1a1a1a;
+  background: var(--ink);
   color: #fff;
   display: flex;
   align-items: center;
@@ -108,8 +141,9 @@ button.ghost {
   font-size: 1.1rem;
 }
 
-.topbar .muted {
-  color: #bbb;
+.topbar .muted,
+.topbar h1 span {
+  color: #b5b5b5;
 }
 
 .topbar-right {
@@ -120,7 +154,11 @@ button.ghost {
 
 .topbar .ghost {
   color: #fff;
-  border-color: #555;
+  border-color: #666;
+}
+
+.topbar .ghost:hover {
+  background: rgba(255, 255, 255, 0.12);
 }
 
 /* Documentos */
@@ -136,17 +174,337 @@ button.ghost {
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-left: 4px solid #efc32c;
-  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--ink-3);
+  border-radius: 4px;
   padding: 0.9rem 1.1rem;
   text-decoration: none;
   color: inherit;
 }
 
 .doc-list a:hover {
-  border-color: #efc32c;
+  border-left-color: var(--ink);
+  background: #fafafa;
+}
+
+.doc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.button-like {
+  display: inline-block;
+  background: var(--ink);
+  color: #fff;
+  font-weight: 600;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  padding: 0.6rem 1rem;
+  text-decoration: none;
+}
+
+.ghost.button-like {
+  background: transparent;
+  border-color: var(--line-strong);
+  color: inherit;
+  font-weight: 400;
+}
+
+/* Badges de status — diferenciadas por tom e borda, sem cor */
+.badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 3px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface-2);
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.badge.draft {
+  background: var(--surface);
+  color: var(--ink-3);
+  border-style: dashed;
+}
+
+.badge.review {
+  background: #dcdcdc;
+  color: var(--ink);
+}
+
+.badge.signed {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+}
+
+.badge.late {
+  background: repeating-linear-gradient(
+    -45deg,
+    #cfcfcf,
+    #cfcfcf 4px,
+    #e8e8e8 4px,
+    #e8e8e8 8px
+  );
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+/* Métricas */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.7rem;
+  margin: 1rem 0;
+}
+
+.metric {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.8rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.metric-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-alert {
+  border-left: 3px solid var(--ink);
+}
+
+/* Filtros */
+.filters {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.filters input {
+  flex: 1;
+}
+
+.filters input,
+.filters select {
+  padding: 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  color: inherit;
+}
+
+/* Barra de conclusão */
+.progress {
+  height: 6px;
+  background: #dcdcdc;
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 0.35rem 0 0.15rem;
+}
+
+.progress div {
+  height: 100%;
+  background: var(--ink);
+}
+
+/* Formulário F4 */
+.form-page {
+  max-width: 980px;
+}
+
+.form-page fieldset {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  margin: 0 0 1rem;
+  padding: 1rem 1.2rem 1.2rem;
+}
+
+.form-page legend {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0.5rem;
+  background: var(--ink);
+  color: #fff;
+  border-radius: 3px;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.field.span-2 {
+  grid-column: span 2;
+}
+.field.span-3 {
+  grid-column: span 3;
+}
+
+.field-inline {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.field input,
+.field select,
+.field textarea {
+  padding: 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font: inherit;
+  background: var(--surface);
+  color: inherit;
+}
+
+.field input[readonly] {
+  background: var(--surface-2);
+  color: var(--ink-2);
+  font-weight: 600;
+}
+
+.field-inline input {
+  width: auto;
+}
+
+.radio-row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.25rem 0;
+}
+
+.radio {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* Linha de impacto: label | Yes/No | valor */
+.impact-row {
+  display: grid;
+  grid-template-columns: 1fr auto 200px;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.4rem 0;
+  border-top: 1px solid var(--surface-2);
+}
+
+.amount {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.amount input {
+  width: 100%;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.req {
+  color: var(--ink);
+}
+
+/* Tabela SET */
+.set-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.set-table th,
+.set-table td {
+  border: 1px solid var(--line);
+  padding: 0.35rem 0.5rem;
+  text-align: left;
+}
+
+.set-table th {
+  background: var(--surface-2);
+  font-weight: 600;
+}
+
+.set-table input {
+  width: 100%;
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 0.25rem;
+  font: inherit;
+  text-align: right;
+}
+
+.set-table input:hover,
+.set-table input:focus {
+  border-color: var(--line);
+  background: var(--surface);
+}
+
+.total-cell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  background: var(--surface-2);
+  font-weight: 600;
+}
+
+.total-row td {
+  background: var(--ink);
+  color: #fff;
+  font-weight: 700;
+}
+
+.total-row .total-cell {
+  background: var(--ink);
+  color: #fff;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding-bottom: 2rem;
+}
+
+@media (max-width: 720px) {
+  .field-grid {
+    grid-template-columns: 1fr;
+  }
+  .field.span-2,
+  .field.span-3 {
+    grid-column: span 1;
+  }
+  .impact-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* PDF */
@@ -158,7 +516,7 @@ button.ghost {
 }
 
 .pdf-viewer .react-pdf__Page {
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }
 
 .pdf-controls {
@@ -186,8 +544,8 @@ button.ghost {
   right: 1.2rem;
   width: 330px;
   height: 440px;
-  background: #fff;
-  border-radius: 10px;
+  background: var(--surface);
+  border-radius: 6px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
@@ -196,8 +554,8 @@ button.ghost {
 }
 
 .chatbot-panel header {
-  background: #1a1a1a;
-  color: #efc32c;
+  background: var(--ink);
+  color: #fff;
   padding: 0.7rem 1rem;
   font-weight: 600;
 }
@@ -214,36 +572,39 @@ button.ghost {
 .bubble {
   max-width: 85%;
   padding: 0.5rem 0.7rem;
-  border-radius: 10px;
+  border-radius: 8px;
   font-size: 0.9rem;
   white-space: pre-wrap;
 }
 
 .bubble.user {
   align-self: flex-end;
-  background: #efc32c;
+  background: var(--ink);
+  color: #fff;
 }
 
 .bubble.assistant {
   align-self: flex-start;
-  background: #eee;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
 }
 
 .bubble.is-error {
-  background: #fdecea;
-  color: #c0392b;
+  background: var(--surface-2);
+  border-left: 3px solid var(--ink);
+  color: var(--ink);
 }
 
 .chatbot-input {
   display: flex;
   gap: 0.4rem;
   padding: 0.6rem;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--line);
 }
 
 .chatbot-input input {
   flex: 1;
   padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
 }
