@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { chat, validateMessages, ChatError } from "./chat.js";
-import { requireAuth, requireRole } from "../auth/middleware.js";
+import { chat, validateMessages, ChatError } from "./chat.ts";
+import { requireAuth, requireRole } from "../auth/middleware.ts";
+import type { ChatMessage } from "../types.ts";
 
-export function chatRouter() {
+export function chatRouter(): Router {
   const router = Router();
 
   router.post("/", requireAuth, requireRole("Demo"), async (req, res) => {
@@ -12,7 +13,7 @@ export function chatRouter() {
     }
 
     try {
-      const reply = await chat(req.body.messages);
+      const reply = await chat((req.body as { messages: ChatMessage[] }).messages);
       return res.json({ reply });
     } catch (error) {
       if (error instanceof ChatError) {

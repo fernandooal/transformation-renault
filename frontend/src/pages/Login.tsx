@@ -1,21 +1,21 @@
-import { useState } from "react";
-import { useAuth } from "../auth/AuthContext.jsx";
+import { useState, type FormEvent } from "react";
+import { useAuth } from "../auth/AuthContext";
 
 export default function Login() {
   const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
     setLoading(true);
     try {
       await login(username, password);
     } catch (err) {
-      setError(err.message);
+      setError(err instanceof Error ? err.message : "Erro ao entrar.");
     } finally {
       setLoading(false);
     }

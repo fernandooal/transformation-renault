@@ -1,7 +1,8 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { Router } from "express";
-import { requireAuth, requireRole } from "../auth/middleware.js";
+import { requireAuth, requireRole } from "../auth/middleware.ts";
+import type { F4Document } from "../types.ts";
 
 const SAMPLES_DIR = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -13,7 +14,7 @@ const SAMPLES_DIR = path.join(
 
 // Lista mock — a estrutura real dos documentos F4 será definida posteriormente.
 // ponytail: array em memória; trocar por banco quando a estrutura do F4 fechar.
-const DOCUMENTS = [
+const DOCUMENTS: F4Document[] = [
   {
     id: 1,
     title: "Engine Harness routing update",
@@ -96,9 +97,20 @@ const DOCUMENTS = [
   },
 ];
 
-const publicDoc = ({ file, ...doc }) => doc;
+const publicDoc = ({ file, ...doc }: F4Document): Omit<F4Document, "file"> => doc;
 
-export function documentsRouter() {
+interface CreateF4Body {
+  titleOfModification?: string;
+  supplier?: string;
+  f4Version?: string;
+  totalImpact?: number | string;
+  offerCurrency?: string;
+  deadline?: string;
+  renaultF4Manager?: string;
+  [extra: string]: unknown;
+}
+
+export function documentsRouter(): Router {
   const router = Router();
 
   router.use(requireAuth, requireRole("Demo"));
@@ -118,7 +130,7 @@ export function documentsRouter() {
       avgCompletion: Math.round(
         DOCUMENTS.reduce((sum, d) => sum + d.completion, 0) / DOCUMENTS.length
       ),
-      byStatus: DOCUMENTS.reduce((acc, d) => {
+      byStatus: DOCUMENTS.reduce<Record<string, number>>((acc, d) => {
         acc[d.status] = (acc[d.status] || 0) + 1;
         return acc;
       }, {}),
@@ -127,24 +139,26 @@ export function documentsRouter() {
 
   /** Criação de F4 — persiste apenas em memória nesta DEMO. */
   router.post("/", (req, res) => {
-    const { titleOfModification, supplier } = req.body || {};
+    const body = (req.body || {}) as CreateF4Body;
+    const { titleOfModification, supplier } = body;
     if (!titleOfModification || !supplier) {
       return res
         .status(400)
         .json({ error: "Title of Modification e Corporate Name são obrigatórios." });
     }
-    const doc = {
-      ...req.body,
+    const doc: F4Document = {
+      ...body,
       id: Math.max(...DOCUMENTS.map((d) => d.id)) + 1,
       title: titleOfModification,
+      supplier,
       status: "Draft",
       completion: 10,
-      version: req.body.f4Version || "Rev 00",
+      version: body.f4Version || "Rev 00",
       signed: false,
-      value: Number(req.body.totalImpact) || 0,
-      currency: req.body.offerCurrency || "EUR",
-      deadline: req.body.deadline || "",
-      owner: req.body.renaultF4Manager || "",
+      value: Number(body.totalImpact) || 0,
+      currency: body.offerCurrency || "EUR",
+      deadline: body.deadline || "",
+      owner: body.renaultF4Manager || "",
       dependsOn: [],
       updatedAt: new Date().toISOString().slice(0, 10),
       file: "f4-exemplo.pdf",

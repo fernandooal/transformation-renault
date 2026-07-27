@@ -1,5 +1,7 @@
 // Integração com a API do Google Gemini via REST (fetch nativo do Node 18+).
 // A chave nunca sai do backend: lida de GEMINI_API_KEY no ambiente.
+import type { ChatMessage } from "../types.ts";
+
 const API_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
 const MODEL = process.env.GEMINI_MODEL || "gemini-flash-latest";
 const MAX_TOKENS = 1024;
@@ -11,21 +13,28 @@ O sistema é o "Renault Transformation Day", plataforma de gestão da documenta�
 (termos contratuais de compra de materiais com terceiros).
 Se a pergunta fugir do escopo do sistema, responda educadamente que só pode ajudar com o sistema.`;
 
+export type ChatErrorCode = "missing_key" | "auth" | "rate_limit" | "upstream";
+
 /** Erro tipado para a rota mapear em respostas HTTP amigáveis. */
 export class ChatError extends Error {
-  constructor(code, message) {
+  code: ChatErrorCode;
+
+  constructor(code: ChatErrorCode, message: string) {
     super(message);
-    this.code = code; // "missing_key" | "auth" | "rate_limit" | "upstream"
+    this.code = code;
   }
+}
+
+interface GeminiResponse {
+  candidates?: Array<{
+    content?: { parts?: Array<{ text?: string }> };
+  }>;
 }
 
 /**
  * Envia o histórico de conversa para a LLM e retorna a resposta do assistente.
- *
- * @param {Array<{role: "user"|"assistant", content: string}>} messages
- * @returns {Promise<string>} texto da resposta
  */
-export async function chat(messages) {
+export async function chat(messages: ChatMessage[]): Promise<string> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     throw new ChatError("missing_key", "GEMINI_API_KEY não definida no ambiente.");
@@ -37,7 +46,7 @@ export async function chat(messages) {
     parts: [{ text: m.content }],
   }));
 
-  let res;
+  let res: Response;
   try {
     res = await fetch(`${API_BASE}/${MODEL}:generateContent`, {
       method: "POST",
@@ -52,13 +61,17 @@ export async function chat(messages) {
       }),
     });
   } catch (err) {
-    throw new ChatError("upstream", `Falha de conexão com o Gemini: ${err.message}`);
+    const message = err instanceof Error ? err.message : String(err);
+    throw new ChatError("upstream", `Falha de conexão com o Gemini: ${message}`);
   }
 
   if (!res.ok) {
     const body = await res.text().catch(() => "");
     if (res.status === 401 || res.status === 403 || res.status === 400) {
-      throw new ChatError("auth", `Chave/requisição rejeitada pelo Gemini (${res.status}): ${body.slice(0, 300)}`);
+      throw new ChatError(
+        "auth",
+        `Chave/requisição rejeitada pelo Gemini (${res.status}): ${body.slice(0, 300)}`
+      );
     }
     if (res.status === 429) {
       throw new ChatError("rate_limit", "Limite de requisições do Gemini atingido.");
@@ -66,7 +79,7 @@ export async function chat(messages) {
     throw new ChatError("upstream", `Erro do Gemini (${res.status}): ${body.slice(0, 300)}`);
   }
 
-  const data = await res.json();
+  const data = (await res.json()) as GeminiResponse;
   const reply = data.candidates?.[0]?.content?.parts
     ?.map((p) => p.text ?? "")
     .join("")
@@ -79,12 +92,12 @@ export async function chat(messages) {
 }
 
 /** Valida o corpo recebido do front antes de repassar à LLM. */
-export function validateMessages(body) {
-  const messages = body?.messages;
+export function validateMessages(body: unknown): string | null {
+  const messages = (body as { messages?: unknown } | null)?.messages;
   if (!Array.isArray(messages) || messages.length === 0) {
     return "O corpo deve conter um array 'messages' não vazio.";
   }
-  for (const m of messages) {
+  for (const m of messages as Array<Partial<ChatMessage> | null>) {
     if (!m || (m.role !== "user" && m.role !== "assistant")) {
       return "Cada mensagem precisa de role 'user' ou 'assistant'.";
     }
@@ -95,7 +108,7 @@ export function validateMessages(body) {
       return "Mensagem muito longa (máximo 4000 caracteres).";
     }
   }
-  if (messages[messages.length - 1].role !== "user") {
+  if ((messages[messages.length - 1] as ChatMessage).role !== "user") {
     return "A última mensagem deve ser do usuário.";
   }
   return null;

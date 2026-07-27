@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
-import config from "./config.js";
-import { ensureSeed } from "./users/store.js";
-import { authRouter } from "./auth/routes.js";
-import { chatRouter } from "./chat/routes.js";
-import { documentsRouter } from "./documents/routes.js";
+import config from "./config.ts";
+import { ensureSeed } from "./users/store.ts";
+import { authRouter } from "./auth/routes.ts";
+import { chatRouter } from "./chat/routes.ts";
+import { documentsRouter } from "./documents/routes.ts";
 
 ensureSeed();
 

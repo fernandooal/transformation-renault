@@ -1,12 +1,13 @@
-import { useRef, useState } from "react";
-import { api } from "../api.js";
+import { useRef, useState, type FormEvent } from "react";
+import { api } from "../api";
+import type { ChatMessage } from "../types";
 
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
-  const listRef = useRef(null);
+  const listRef = useRef<HTMLDivElement | null>(null);
 
   function scrollDown() {
     requestAnimationFrame(() => {
@@ -14,12 +15,12 @@ export default function Chatbot() {
     });
   }
 
-  async function send(e) {
+  async function send(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const text = input.trim();
     if (!text || sending) return;
 
-    const history = [...messages, { role: "user", content: text }];
+    const history: ChatMessage[] = [...messages, { role: "user", content: text }];
     setMessages(history);
     setInput("");
     setSending(true);
@@ -27,16 +28,14 @@ export default function Chatbot() {
 
     try {
       // A API é stateless: o histórico completo vai a cada mensagem.
-      const data = await api("/api/chat", {
+      const data = await api<{ reply: string }>("/api/chat", {
         method: "POST",
-        body: JSON.stringify({ messages: history }),
+        body: JSON.stringify({ messages: history.map(({ role, content }) => ({ role, content })) }),
       });
       setMessages([...history, { role: "assistant", content: data.reply }]);
     } catch (err) {
-      setMessages([
-        ...history,
-        { role: "assistant", content: `⚠️ ${err.message}`, isError: true },
-      ]);
+      const message = err instanceof Error ? err.message : "Erro no chatbot.";
+      setMessages([...history, { role: "assistant", content: `⚠️ ${message}`, isError: true }]);
     } finally {
       setSending(false);
       scrollDown();

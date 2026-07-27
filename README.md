@@ -16,8 +16,8 @@ Aplicação web (DEMO) para o projeto de gestão da documentação **F4** — te
 
 | Camada    | Tecnologias |
 |-----------|-------------|
-| Backend   | Node.js, Express, jsonwebtoken, bcryptjs, API Google Gemini |
-| Frontend  | React 18, Vite, react-router-dom, react-pdf |
+| Backend   | Node.js + TypeScript (execução nativa de .ts), Express, jsonwebtoken, bcryptjs, API Google Gemini |
+| Frontend  | React 18 + TypeScript, Vite, react-router-dom, react-pdf |
 | Dados     | JSON em arquivo (`backend/data/users.json`, criado automaticamente) |
 
 ## Estrutura

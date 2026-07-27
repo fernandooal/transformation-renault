@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
-import { storage } from "../api.js";
+import { storage } from "../api";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -11,10 +11,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 export default function DocumentView() {
-  const { id } = useParams();
-  const [numPages, setNumPages] = useState(null);
+  const { id } = useParams<{ id: string }>();
+  const [numPages, setNumPages] = useState<number | null>(null);
   const [page, setPage] = useState(1);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   // O PDF é servido por rota autenticada — o token vai no header.
   const file = useMemo(

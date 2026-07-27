@@ -1,14 +1,17 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
-import { findByUsername, findById, toPublic } from "../users/store.js";
-import { signToken } from "./jwt.js";
-import { requireAuth } from "./middleware.js";
+import { findByUsername, findById, toPublic } from "../users/store.ts";
+import { signToken } from "./jwt.ts";
+import { requireAuth } from "./middleware.ts";
 
-export function authRouter() {
+export function authRouter(): Router {
   const router = Router();
 
   router.post("/login", (req, res) => {
-    const { username, password } = req.body ?? {};
+    const { username, password } = (req.body ?? {}) as {
+      username?: unknown;
+      password?: unknown;
+    };
     if (typeof username !== "string" || typeof password !== "string") {
       return res.status(400).json({ error: "Informe usuário e senha." });
     }
@@ -20,7 +23,7 @@ export function authRouter() {
   });
 
   router.get("/me", requireAuth, (req, res) => {
-    const user = findById(req.user.sub);
+    const user = findById(req.user!.sub);
     if (!user) return res.status(404).json({ error: "Usuário não encontrado." });
     return res.json({ user: toPublic(user) });
   });

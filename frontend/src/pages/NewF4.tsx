@@ -1,10 +1,39 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { api } from "../api.js";
+import { api } from "../api";
+
+type FieldKind =
+  | "text"
+  | "date"
+  | "number"
+  | "radio"
+  | "select"
+  | "yesno"
+  | "checkbox"
+  | "textarea"
+  | "impact";
+
+interface F4Field {
+  name: string;
+  label: string;
+  type?: FieldKind;
+  options?: string[];
+  required?: boolean;
+  placeholder?: string;
+  span?: number;
+}
+
+interface F4Section {
+  title: string;
+  fields: F4Field[];
+}
+
+type FormValue = string | boolean | undefined;
+type FormState = Record<string, FormValue>;
 
 // Campos baseados no formulário real "F4 sheet - Cost of Modification" (págs. 1 e 2).
 // Editar SECTIONS é suficiente para alterar o formulário inteiro.
-const SECTIONS = [
+const SECTIONS: F4Section[] = [
   {
     title: "Escopo",
     fields: [
@@ -170,19 +199,30 @@ const SET_ROWS = [
   "Additional quantities for VC...",
 ];
 
-const slug = (label) => "set_" + label.replace(/[^a-zA-Z]/g, "").toLowerCase();
-const num = (v) => Number(v) || 0;
-const fmt = (v) => v.toLocaleString("pt-BR", { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+const slug = (label: string) => "set_" + label.replace(/[^a-zA-Z]/g, "").toLowerCase();
+const num = (v: FormValue) => Number(v) || 0;
+const str = (v: FormValue) => (typeof v === "string" ? v : "");
+const fmt = (v: number) =>
+  v.toLocaleString("pt-BR", { minimumFractionDigits: 3, maximumFractionDigits: 3 });
 
-function Field({ field, form, onChange }) {
+interface FieldProps {
+  field: F4Field;
+  form: FormState;
+  onChange: (name: string, value: string | boolean) => void;
+}
+
+function Field({ field, form, onChange }: FieldProps) {
   const value = form[field.name];
   const common = {
     id: field.name,
     name: field.name,
     required: field.required,
     placeholder: field.placeholder,
-    onChange: (e) =>
-      onChange(field.name, field.type === "checkbox" ? e.target.checked : e.target.value),
+    onChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
+      onChange(
+        field.name,
+        field.type === "checkbox" ? (e.target as HTMLInputElement).checked : e.target.value
+      ),
   };
 
   if (field.type === "checkbox") {
@@ -195,7 +235,7 @@ function Field({ field, form, onChange }) {
   }
 
   if (field.type === "yesno" || field.type === "radio") {
-    const options = field.type === "yesno" ? ["Yes", "No"] : field.options;
+    const options = field.type === "yesno" ? ["Yes", "No"] : field.options ?? [];
     return (
       <div className={`field span-${field.span || 1}`}>
         <span>{field.label}</span>
@@ -242,10 +282,10 @@ function Field({ field, form, onChange }) {
             step="0.001"
             placeholder="0.000"
             disabled={form[flag] !== "Yes"}
-            value={value || ""}
+            value={str(value)}
             onChange={(e) => onChange(field.name, e.target.value)}
           />
-          <span className="muted small">{form.offerCurrency || "EUR"}</span>
+          <span className="muted small">{str(form.offerCurrency) || "EUR"}</span>
         </div>
       </div>
     );
@@ -258,16 +298,16 @@ function Field({ field, form, onChange }) {
         {field.required && <b className="req"> *</b>}
       </span>
       {field.type === "select" ? (
-        <select value={value || ""} {...common}>
+        <select value={str(value)} {...common}>
           <option value="">Selecione...</option>
-          {field.options.map((opt) => (
+          {(field.options ?? []).map((opt) => (
             <option key={opt}>{opt}</option>
           ))}
         </select>
       ) : field.type === "textarea" ? (
-        <textarea rows={3} value={value || ""} {...common} />
+        <textarea rows={3} value={str(value)} {...common} />
       ) : (
-        <input type={field.type || "text"} value={value || ""} {...common} />
+        <input type={field.type || "text"} value={str(value)} {...common} />
       )}
     </label>
   );
@@ -275,11 +315,12 @@ function Field({ field, form, onChange }) {
 
 export default function NewF4() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ offerCurrency: "EUR", units: "Part" });
-  const [error, setError] = useState(null);
+  const [form, setForm] = useState<FormState>({ offerCurrency: "EUR", units: "Part" });
+  const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
-  const setField = (name, value) => setForm((f) => ({ ...f, [name]: value }));
+  const setField = (name: string, value: string | boolean) =>
+    setForm((f) => ({ ...f, [name]: value }));
 
   const setTotal = useMemo(
     () =>
@@ -300,7 +341,7 @@ export default function NewF4() {
     num(form.packagingImpact);
   const unitImpact = num(form.annualVolume) ? totalImpact / num(form.annualVolume) : 0;
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSaving(true);
     setError(null);
@@ -311,7 +352,7 @@ export default function NewF4() {
       });
       navigate("/");
     } catch (err) {
-      setError(err.message);
+      setError(err instanceof Error ? err.message : "Erro ao salvar.");
       setSaving(false);
     }
   }
@@ -400,7 +441,7 @@ export default function NewF4() {
                       <td>
                         <input
                           type="number"
-                          value={form[`${key}_qty`] || ""}
+                          value={str(form[`${key}_qty`])}
                           onChange={(e) => setField(`${key}_qty`, e.target.value)}
                         />
                       </td>
@@ -408,7 +449,7 @@ export default function NewF4() {
                         <input
                           type="number"
                           step="0.001"
-                          value={form[`${key}_unit`] || ""}
+                          value={str(form[`${key}_unit`])}
                           onChange={(e) => setField(`${key}_unit`, e.target.value)}
                         />
                       </td>
@@ -428,22 +469,24 @@ export default function NewF4() {
             <legend>Total Impact</legend>
             <div className="field-grid">
               <label className="field" htmlFor="annualVolume">
-                <span>Average Full Year volume of units (12 months) — {form.units || "Part"}/year</span>
+                <span>
+                  Average Full Year volume of units (12 months) — {str(form.units) || "Part"}/year
+                </span>
                 <input
                   id="annualVolume"
                   type="number"
-                  value={form.annualVolume || ""}
+                  value={str(form.annualVolume)}
                   onChange={(e) => setField("annualVolume", e.target.value)}
                 />
               </label>
               <label className="field">
-                <span>Total impact — {form.offerCurrency || "EUR"}</span>
+                <span>Total impact — {str(form.offerCurrency) || "EUR"}</span>
                 <input readOnly value={fmt(totalImpact)} />
               </label>
               <label className="field">
                 <span>
-                  Unit impact w/o SET, for information only — {form.offerCurrency || "EUR"}/
-                  {form.units || "Part"}
+                  Unit impact w/o SET, for information only — {str(form.offerCurrency) || "EUR"}/
+                  {str(form.units) || "Part"}
                 </span>
                 <input readOnly value={fmt(unitImpact)} />
               </label>

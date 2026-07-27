@@ -1,15 +1,16 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useAuth } from "./auth/AuthContext.jsx";
-import Login from "./pages/Login.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
-import DocumentView from "./pages/DocumentView.jsx";
-import NewF4 from "./pages/NewF4.jsx";
-import Chatbot from "./components/Chatbot.jsx";
+import type { ReactNode } from "react";
+import { useAuth } from "./auth/AuthContext";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import DocumentView from "./pages/DocumentView";
+import NewF4 from "./pages/NewF4";
+import Chatbot from "./components/Chatbot";
 
-function Protected({ children }) {
+function Protected({ children }: { children: ReactNode }) {
   const { token } = useAuth();
   if (!token) return <Navigate to="/login" replace />;
-  return children;
+  return <>{children}</>;
 }
 
 export default function App() {

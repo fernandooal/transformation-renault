@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { api } from "../api.js";
-import { useAuth } from "../auth/AuthContext.jsx";
+import { api } from "../api";
+import { useAuth } from "../auth/AuthContext";
+import type { F4Document, Metrics } from "../types";
 
-const STATUS_CLASS = {
+const STATUS_CLASS: Record<string, string> = {
   Draft: "draft",
   "In approval": "review",
   Signed: "signed",
@@ -12,7 +13,7 @@ const STATUS_CLASS = {
 
 const STATUSES = ["Todos", "Draft", "In approval", "Signed", "Late"];
 
-const money = (value, currency = "EUR") =>
+const money = (value: number, currency = "EUR") =>
   new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency,
@@ -21,17 +22,17 @@ const money = (value, currency = "EUR") =>
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
-  const [documents, setDocuments] = useState([]);
-  const [metrics, setMetrics] = useState(null);
+  const [documents, setDocuments] = useState<F4Document[]>([]);
+  const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [status, setStatus] = useState("Todos");
   const [query, setQuery] = useState("");
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    api("/api/documents")
+    api<{ documents: F4Document[] }>("/api/documents")
       .then((data) => setDocuments(data.documents))
-      .catch((err) => setError(err.message));
-    api("/api/documents/metrics").then(setMetrics).catch(() => {});
+      .catch((err: Error) => setError(err.message));
+    api<Metrics>("/api/documents/metrics").then(setMetrics).catch(() => {});
   }, []);
 
   const visible = useMemo(
@@ -39,7 +40,7 @@ export default function Dashboard() {
       documents.filter(
         (doc) =>
           (status === "Todos" || doc.status === status) &&
-          `${doc.title} ${doc.supplier} ${doc.contract}`
+          `${doc.title} ${doc.supplier} ${doc.contract ?? ""}`
             .toLowerCase()
             .includes(query.toLowerCase())
       ),
@@ -128,7 +129,8 @@ export default function Dashboard() {
                 <span className="muted small">
                   {doc.supplier} · {doc.contract} · {doc.version} · {doc.vehicles} · {money(doc.value, doc.currency)} · prazo{" "}
                   {doc.deadline}
-                  {doc.dependsOn?.length > 0 && ` · depende da F4 #${doc.dependsOn.join(", #")}`}
+                  {doc.dependsOn && doc.dependsOn.length > 0 &&
+                    ` · depende da F4 #${doc.dependsOn.join(", #")}`}
                 </span>
                 <div className="progress" title={`${doc.completion}% concluído`}>
                   <div style={{ width: `${doc.completion}%` }} />
