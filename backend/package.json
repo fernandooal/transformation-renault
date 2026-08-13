@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Backend da DEMO Renault Transformation Day (F4)",
   "type": "module",
-  "main": "src/server.js",
+  "main": "src/server.ts",
   "scripts": {
     "dev": "node --watch src/server.ts",
     "start": "node src/server.ts",
