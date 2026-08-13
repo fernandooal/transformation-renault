@@ -20,12 +20,70 @@ Aplicação web (DEMO) para o projeto de gestão da documentação **F4** — te
 | Frontend  | React 18 + TypeScript, Vite, react-router-dom, react-pdf |
 | Dados     | JSON em arquivo (`backend/data/users.json`, criado automaticamente) |
 
-## Estrutura
+## Arquitetura
+
+O projeto é um monolito simples, mas ambos os lados seguem **MVC**: cada camada tem uma
+responsabilidade única e só conversa com a camada vizinha.
+
+### Backend — MVC clássico
 
 ```
-backend/   API Express — módulos: auth/ (JWT + RBAC), users/, chat/ (IA), documents/ (F4)
-frontend/  React + Vite — pages/ (Login, Dashboard, Visualizador), components/ (Chatbot)
+backend/src/
+├── server.ts              entrypoint: seed + listen
+├── app.ts                 monta o Express (middlewares globais + rotas)
+├── config/                variáveis de ambiente em um só lugar
+├── routes/                URL → controller (nenhuma regra aqui)
+├── controllers/           lê req, chama model/service, devolve res
+├── models/                dados e regras de domínio (users, documentos F4)
+├── services/              integrações externas (JWT, Google Gemini)
+├── middlewares/           autenticação e RBAC
+├── validators/            validação do corpo das requisições
+└── types/                 interfaces compartilhadas
 ```
+
+Fluxo de uma requisição:
+
+```
+request → middleware (requireAuth/requireRole) → route → validator → controller → model/service → response
+```
+
+| Camada       | Faz                                                | Não faz                              |
+|--------------|----------------------------------------------------|--------------------------------------|
+| `routes`     | declara caminho, método e middlewares               | lógica de negócio                    |
+| `controllers`| traduz HTTP ↔ domínio, escolhe o status code        | acessar arquivo/banco ou API externa |
+| `models`     | guarda e calcula os dados (usuários, F4, métricas)  | conhecer `req`/`res`                 |
+| `services`   | fala com o mundo externo (JWT, LLM)                 | conhecer `req`/`res`                 |
+
+Regra prática: um controller nunca importa `fs`/`fetch`, e um model nunca importa `express`.
+Hoje `document.model.ts` mantém um array em memória — quando entrar o banco, só esse arquivo muda.
+
+### Frontend — MVC adaptado ao React
+
+```
+frontend/src/
+├── main.tsx               bootstrap (router + AuthProvider)
+├── App.tsx                mapa de rotas
+├── models/                tipos do domínio + schema do formulário F4
+├── services/              acesso à API (http, auth, document, chat)
+├── controllers/           hooks com estado e regras (useDocuments, useF4Form, useChat, AuthContext)
+└── views/
+    ├── pages/             telas completas (Login, Dashboard, DocumentView, NewF4)
+    └── components/        peças reutilizáveis (Chatbot, F4Field, ProtectedRoute)
+```
+
+Fluxo de uma tela:
+
+```
+view (JSX) → controller (hook) → service (fetch) → API
+```
+
+- **Model** — formato dos dados. `models/f4Form.ts` descreve o formulário F4 inteiro em dados:
+  editar `SECTIONS` altera a tela sem tocar em JSX.
+- **Service** — única camada que conhece URLs e `fetch`; injeta o JWT e normaliza erros.
+- **Controller** — hooks que guardam estado, filtram, calculam totais e chamam os services.
+- **View** — só recebe valores e renderiza; mantém apenas estado visual (painel aberto, página do PDF).
+
+Uma view não chama `fetch` diretamente, e um hook de controller não devolve JSX.
 
 ## Como rodar
 
@@ -66,6 +124,8 @@ Abra `http://localhost:5173` no navegador.
 | `/api/auth/login`           | POST   | —             | Login → `{ token, user }`          |
 | `/api/auth/me`              | GET    | Bearer        | Dados do usuário logado            |
 | `/api/documents`            | GET    | Bearer + Demo | Lista de documentos F4 (mock)      |
+| `/api/documents/metrics`    | GET    | Bearer + Demo | Métricas agregadas do dashboard    |
+| `/api/documents`            | POST   | Bearer + Demo | Cria uma F4 (memória)              |
 | `/api/documents/:id/file`   | GET    | Bearer + Demo | Arquivo PDF do documento           |
 | `/api/chat`                 | POST   | Bearer + Demo | Chatbot (`{ messages: [...] }`)    |
 
