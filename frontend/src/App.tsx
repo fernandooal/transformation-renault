@@ -1,46 +1,40 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import type { ReactNode } from "react";
-import { useAuth } from "./auth/AuthContext";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import DocumentView from "./pages/DocumentView";
-import NewF4 from "./pages/NewF4";
-import Chatbot from "./components/Chatbot";
-
-function Protected({ children }: { children: ReactNode }) {
-  const { token } = useAuth();
-  if (!token) return <Navigate to="/login" replace />;
-  return <>{children}</>;
-}
+import { useAuth } from "./controllers/AuthContext";
+import ProtectedRoute from "./views/components/ProtectedRoute";
+import Chatbot from "./views/components/Chatbot";
+import LoginPage from "./views/pages/LoginPage";
+import DashboardPage from "./views/pages/DashboardPage";
+import DocumentViewPage from "./views/pages/DocumentViewPage";
+import NewF4Page from "./views/pages/NewF4Page";
 
 export default function App() {
   const { token } = useAuth();
   return (
     <>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route
           path="/"
           element={
-            <Protected>
-              <Dashboard />
-            </Protected>
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
           }
         />
         <Route
           path="/f4/nova"
           element={
-            <Protected>
-              <NewF4 />
-            </Protected>
+            <ProtectedRoute>
+              <NewF4Page />
+            </ProtectedRoute>
           }
         />
         <Route
           path="/documentos/:id"
           element={
-            <Protected>
-              <DocumentView />
-            </Protected>
+            <ProtectedRoute>
+              <DocumentViewPage />
+            </ProtectedRoute>
           }
         />
         <Route path="*" element={<Navigate to="/" replace />} />
