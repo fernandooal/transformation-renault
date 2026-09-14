@@ -60,30 +60,78 @@ Hoje `document.model.ts` mantém um array em memória — quando entrar o banco,
 ### Frontend — MVC adaptado ao React
 
 ```
-frontend/src/
-├── main.tsx               bootstrap (router + AuthProvider)
-├── App.tsx                mapa de rotas
-├── models/                tipos do domínio + schema do formulário F4
-├── services/              acesso à API (http, auth, document, chat)
-├── controllers/           hooks com estado e regras (useDocuments, useF4Form, useChat, AuthContext)
-└── views/
-    ├── pages/             telas completas (Login, Dashboard, DocumentView, NewF4)
-    └── components/        peças reutilizáveis (Chatbot, F4Field, ProtectedRoute)
+frontend/
+├── design/                referência visual exportada do Figma (telas, style-guide)
+└── src/
+    ├── main.tsx           bootstrap (router + AuthProvider)
+    ├── App.tsx            mapa de rotas (AuthLayout · AppLayout)
+    ├── assets/            logo RGdB e arte de fundo das telas de autenticação
+    ├── models/            domínio: status, roles, f4, dashboard, auth, navigation,
+    │                      e o schema do formulário F4 (f4Form)
+    ├── services/          acesso a dados (http, auth, f4, dashboard, document, chat)
+    │   └── mock/          dataset da DEMO no domínio da mentoria
+    ├── controllers/       hooks com estado e regras (useLogin, useCadastro,
+    │                      useRecuperarSenha, useDashboard, useF4List, useF4Detail,
+    │                      useF4Form, useChat, AuthContext)
+    ├── utils/             funções puras (cx, format, datetime, validation, geometry)
+    ├── styles/            tokens.css · base · utilities · layout · components/* · legacy
+    └── views/
+        ├── layouts/       AuthLayout (fundo escuro + card de vidro) e AppLayout (sidebar)
+        ├── pages/         Login, Cadastro, RecuperarSenha, Dashboards, TodasAsF4s,
+        │                  F4Detail, NewF4, DocumentView, ControleAcesso, Fornecedores
+        └── components/
+            ├── ui/        primitivos (Button, TextField, Card, DataTable, Modal…)
+            ├── icons/     SVGs próprios, um Icon tipado por nome
+            ├── charts/    StackedBarChart, PieChart, ChartLegend (SVG próprio)
+            └── f4/        peças da tela de detalhe (fluxo, timeline, partes)
 ```
 
 Fluxo de uma tela:
 
 ```
-view (JSX) → controller (hook) → service (fetch) → API
+view (JSX) → controller (hook) → service (fetch ou mock) → API
 ```
 
-- **Model** — formato dos dados. `models/f4Form.ts` descreve o formulário F4 inteiro em dados:
-  editar `SECTIONS` altera a tela sem tocar em JSX.
-- **Service** — única camada que conhece URLs e `fetch`; injeta o JWT e normaliza erros.
-- **Controller** — hooks que guardam estado, filtram, calculam totais e chamam os services.
-- **View** — só recebe valores e renderiza; mantém apenas estado visual (painel aberto, página do PDF).
+- **Model** — formato dos dados e vocabulário do domínio. `models/status.ts` é o
+  **ponto único de verdade** dos 8 status da F4: mudar rótulo, cor ou agrupamento de
+  filtro é um arquivo só. `models/f4Form.ts` descreve o formulário F4 inteiro em dados.
+- **Service** — única camada que conhece URLs, `fetch` e os mocks; injeta o JWT e
+  normaliza erros.
+- **Controller** — hooks que guardam estado, filtram, calculam e chamam os services.
+- **View** — só recebe valores e renderiza; mantém apenas estado visual.
 
 Uma view não chama `fetch` diretamente, e um hook de controller não devolve JSX.
+
+#### Design system
+
+Os tokens vivem em `styles/tokens.css` e **nenhum outro arquivo escreve hex**. Vêm do
+style-guide do Figma: Poppins nos títulos e Lato no corpo, primárias
+(`#4713A4` `#2307AF` `#8467AD` + neutros) para 75% da interface e auxiliares
+(`#160B3D` `#66D8D0` `#4B9AF6` `#E0D9EC`) para os 25% restantes.
+
+Duas exceções documentadas no próprio arquivo: as cores de texto dos badges verde e
+laranja foram escurecidas até passar 4,5:1 contra o próprio fundo — no par literal do
+style-guide elas ficam em 3,0:1 e 3,2:1, ilegíveis em 12px. Reverter são três linhas.
+
+`styles/legacy.css` guarda o CSS herdado da DEMO monocromática que ainda não tem design
+próprio (formulário F4, visualizador de PDF, chatbot). Uma ponte no topo reaponta as
+variáveis antigas para os tokens novos.
+
+#### Dados: mock por padrão
+
+O backend ainda fala o vocabulário antigo (`Draft` / `In approval` / `Signed` / `Late`,
+cargo único `Demo`) e não tem cadastro, recuperação de senha, histórico de workflow nem
+métricas de dashboard. Enquanto isso, o frontend serve um dataset próprio:
+
+| Variável | Default | O que controla |
+|---|---|---|
+| `VITE_MOCK_API` | `true` | dataset de F4 (10 documentos nos 8 status) e números do dashboard |
+| `VITE_MOCK_AUTH` | `true` | cadastro e recuperação de senha (código fixo `1790`) |
+
+O login é **real** em qualquer caso: `auth.service.ts` envia `{ email, username, password }`
+enquanto o backend for username-only — é o único ponto do frontend que conhece a
+divergência. Os números do dashboard marcados `// MOCK —` em `services/mock/dashboard.mock.ts`
+são os que dependem do histórico de workflow; o resto é derivado do dataset.
 
 ## Como rodar
 
@@ -105,10 +153,12 @@ Na primeira execução o servidor cria `backend/data/users.json` com o usuário 
 ```sh
 cd frontend
 npm install
+cp .env.example .env   # opcional: só para desligar os mocks
 npm run dev            # http://localhost:5173 (proxy /api -> :3001)
 ```
 
-Abra `http://localhost:5173` no navegador.
+Abra `http://localhost:5173` no navegador. Em desenvolvimento, `/__ui` mostra o kit de
+componentes (primitivos, badges dos 8 status, gráficos) para comparar com o style-guide.
 
 ### Credenciais da DEMO
 
