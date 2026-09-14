@@ -1,0 +1,91 @@
+/* Tabela de dados. Rolagem horizontal fica no contêiner, nunca no body. */
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+}
+
+.data-table th {
+  height: 56px;
+  padding: 0 var(--space-5);
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-brand);
+  background: var(--color-surface-muted);
+  white-space: nowrap;
+}
+.data-table th:first-child {
+  border-top-left-radius: var(--radius-lg);
+}
+.data-table th:last-child {
+  border-top-right-radius: var(--radius-lg);
+}
+
+.data-table td {
+  height: var(--row-h);
+  padding: var(--space-3) var(--space-5);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  vertical-align: middle;
+}
+
+.data-table tbody tr {
+  transition: background-color 0.12s ease;
+}
+.data-table tbody tr.is-clickable {
+  cursor: pointer;
+}
+.data-table tbody tr.is-clickable:hover {
+  background: var(--color-surface-hover);
+}
+
+.data-table .align-center {
+  text-align: center;
+}
+.data-table .align-right {
+  text-align: right;
+}
+
+/* célula principal: nome em destaque + código abaixo */
+.cell-primary {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.cell-primary__title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-md);
+  color: var(--color-text-brand);
+}
+.cell-primary__meta {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+.cell-person {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-brand);
+  white-space: nowrap;
+}
+
+/* a coluna da peça é a única que pode quebrar em duas linhas */
+.data-table td:first-child {
+  min-width: 240px;
+}
+
+.cell-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex: none;
+}

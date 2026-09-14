@@ -1,0 +1,70 @@
+/* Utilitários genéricos. Nada específico de tela. */
+
+.muted {
+  color: var(--color-text-muted);
+}
+
+.small {
+  font-size: var(--text-sm);
+}
+
+.error {
+  color: var(--color-negative);
+  font-weight: var(--weight-bold);
+  background: var(--c-orange-50);
+  border-left: 3px solid var(--color-negative);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.u-stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.u-row {
+  display: flex;
+  align-items: center;
+}
+
+/* Aviso neutro — distinto de .error, que é vermelho. */
+.notice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-text-brand);
+  background: var(--c-blue-50);
+  border-left: 3px solid var(--c-blue-600);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+}
+
+/* Link de pular navegação: só aparece com foco por teclado. */
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: -60px;
+  z-index: var(--z-modal);
+  background: var(--color-surface);
+  color: var(--color-text-brand);
+  font-weight: var(--weight-bold);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-card);
+  transition: top 0.15s ease;
+}
+.skip-link:focus {
+  top: var(--space-4);
+}

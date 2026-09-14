@@ -1,0 +1,104 @@
+/* Gráficos em SVG próprio. Eixos e grade recessivos; identidade nas legendas. */
+
+.chart {
+  position: relative;
+  width: 100%;
+}
+
+.chart__svg {
+  display: block;
+  width: 100%;
+  /* altura vem do componente (--chart-h). Sem isto, um card largo faz o
+     gráfico crescer proporcionalmente e virar uma parede de barras. */
+  height: var(--chart-h, 230px);
+  overflow: visible;
+}
+
+.chart__axis-label {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  fill: var(--color-text-muted);
+}
+
+.chart__grid {
+  stroke: var(--color-border);
+  stroke-width: 1;
+}
+
+.chart__mark {
+  transition: opacity 0.12s ease;
+  cursor: default;
+}
+.chart--hovering .chart__mark {
+  opacity: 0.45;
+}
+.chart--hovering .chart__mark.is-hovered {
+  opacity: 1;
+}
+
+/* Legenda */
+.chart-legend {
+  display: flex;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+  margin-top: var(--space-4);
+}
+.chart-legend--column {
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: 0;
+}
+.chart-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+.chart-legend__swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex: none;
+}
+.chart-legend--emphasis .chart-legend__item {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  color: var(--color-text);
+}
+.chart-legend--emphasis .chart-legend__value {
+  font-weight: var(--weight-bold);
+  color: var(--color-text-brand);
+}
+.chart-legend--emphasis .chart-legend__swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+}
+
+/* Tooltip */
+.chart__tooltip {
+  position: absolute;
+  transform: translate(-50%, -110%);
+  pointer-events: none;
+  background: var(--color-text);
+  color: var(--color-text-on-dark);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  z-index: 2;
+}
+.chart__tooltip strong {
+  font-weight: var(--weight-bold);
+}
+
+/* Pizza + legenda lado a lado */
+.chart-pie {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+  justify-content: center;
+}

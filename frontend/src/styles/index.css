@@ -1,0 +1,20 @@
+/* Único import de estilos do app (main.tsx). A ordem importa. */
+@import "./tokens.css";
+@import "./base.css";
+@import "./utilities.css";
+@import "./layout.css";
+
+/* Componentes */
+@import "./components/button.css";
+@import "./components/form.css";
+@import "./components/badge.css";
+@import "./components/card.css";
+@import "./components/chips.css";
+@import "./components/table.css";
+@import "./components/tabs.css";
+@import "./components/chart.css";
+@import "./components/f4-detail.css";
+@import "./components/modal.css";
+
+/* Herdado da DEMO monocromática; encolhe a cada etapa. */
+@import "./legacy.css";

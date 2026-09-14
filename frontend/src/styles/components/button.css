@@ -1,0 +1,125 @@
+/* Botões. `.btn` substitui o antigo seletor de elemento `button {}`. */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn:hover {
+  text-decoration: none;
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* tamanhos */
+.btn--sm {
+  height: 36px;
+  padding: 0 var(--space-4);
+  font-size: var(--text-sm);
+}
+.btn--md {
+  height: var(--control-h);
+  padding: 0 var(--space-6);
+  font-size: var(--text-md);
+}
+.btn--lg {
+  height: var(--control-h-lg);
+  padding: 0 var(--space-7);
+  font-size: var(--text-lg);
+}
+
+/* variantes */
+.btn--primary {
+  background: var(--color-primary);
+  color: var(--color-text-on-primary);
+}
+.btn--primary:hover:not(:disabled) {
+  background: var(--color-primary-strong);
+}
+
+/* CTA das telas de autenticação: pílula branca com texto roxo */
+.btn--onDark {
+  background: var(--color-surface);
+  color: var(--color-primary);
+}
+.btn--onDark:hover:not(:disabled) {
+  background: var(--c-white-warm);
+}
+
+.btn--outline {
+  background: transparent;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+.btn--outline:hover:not(:disabled) {
+  background: var(--color-surface-hover);
+}
+
+.btn--ghost {
+  /* fundo branco de propósito: sobre o cinza do app (#E7E7E7) um ghost
+     transparente com borda #E6E6E6 fica invisível. */
+  background: var(--color-surface);
+  border-color: var(--color-border-strong);
+  color: var(--color-text-brand);
+}
+.btn--ghost:hover:not(:disabled) {
+  background: var(--color-surface-hover);
+}
+
+.btn--link {
+  background: none;
+  border: 0;
+  height: auto;
+  padding: 0;
+  color: var(--color-text-brand);
+  font-weight: var(--weight-bold);
+}
+.btn--link:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.btn--block {
+  width: 100%;
+}
+
+/* Botão só de ícone */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-brand);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.icon-btn:hover {
+  background: var(--color-surface-hover);
+}
+.icon-btn--soft {
+  background: var(--c-orange-50);
+  color: var(--c-orange-600);
+}
+.icon-btn--onDark {
+  color: var(--color-text-on-dark);
+}
+.icon-btn--onDark:hover {
+  background: rgba(255, 255, 255, 0.12);
+}

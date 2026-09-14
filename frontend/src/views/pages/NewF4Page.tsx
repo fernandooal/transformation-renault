@@ -2,26 +2,27 @@ import { Link } from "react-router-dom";
 import { useF4Form } from "../../controllers/useF4Form";
 import { SECTIONS, SET_ROWS, fmt, num, slug, str } from "../../models/f4Form";
 import F4Field from "../components/F4Field";
+import { Button, buttonClass } from "../components/ui";
+import PageHeader from "../components/PageHeader";
 
 export default function NewF4Page() {
   const { form, setField, setTotal, totalImpact, unitImpact, error, saving, submit, fillWithAI } =
     useF4Form();
 
   return (
-    <div className="page">
-      <header className="topbar">
-        <Link to="/" className="ghost">
-          ← Voltar
-        </Link>
-        <h1>
-          F4 sheet — <span>Cost of Modification</span>
-        </h1>
-        <button type="button" className="ghost" onClick={fillWithAI}>
-          Preencher com IA
-        </button>
-      </header>
+    <>
+      <PageHeader
+        title="Nova F4"
+        subtitle="F4 sheet — Cost of Modification"
+        back={{ to: "/f4", label: "Voltar" }}
+        actions={
+          <Button type="button" variant="ghost" onClick={fillWithAI}>
+            Preencher com IA
+          </Button>
+        }
+      />
 
-      <main className="form-page">
+      <div className="form-page">
         <p className="muted small">
           RPIFDASIA20170007 — V251028 · RENAULT — CONFIDENTIAL C
         </p>
@@ -113,15 +114,15 @@ export default function NewF4Page() {
           </fieldset>
 
           <div className="form-actions">
-            <Link to="/" className="ghost button-like">
+            <Link to="/" className={buttonClass("ghost")}>
               Cancelar
             </Link>
-            <button type="submit" disabled={saving}>
+            <Button type="submit" loading={saving}>
               {saving ? "Salvando..." : "Criar F4"}
-            </button>
+            </Button>
           </div>
         </form>
-      </main>
-    </div>
+      </div>
+    </>
   );
 }
