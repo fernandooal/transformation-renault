@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <rect width="1920" height="1080" fill="#160B3D"/>
+  <g fill="#4713A4">
+    <polygon points="560,190 1180,690 250,900" opacity=".55"/>
+    <polygon points="560,190 1740,470 1180,690" opacity=".42"/>
+    <polygon points="0,470 560,190 250,900" opacity=".30"/>
+    <polygon points="0,900 250,900 620,1080 0,1080" opacity=".38"/>
+    <polygon points="250,900 1180,690 980,1080 620,1080" opacity=".26"/>
+    <polygon points="1180,690 1740,470 1920,760 1180,1080" opacity=".18"/>
+    <polygon points="980,1080 1180,690 1180,1080" opacity=".33"/>
+  </g>
+  <g fill="#8467AD">
+    <polygon points="560,190 700,120 1180,690" opacity=".22"/>
+    <polygon points="1560,0 1700,0 1400,470 1330,300" opacity=".16"/>
+    <polygon points="1790,0 1920,0 1920,300 1660,430" opacity=".10"/>
+  </g>
+  <g fill="#66D8D0">
+    <polygon points="1860,60 1920,20 1920,240 1830,300" opacity=".16"/>
+    <polygon points="1740,470 1920,760 1920,470" opacity=".07"/>
+  </g>
+  <polygon points="0,0 1920,0 1920,140 0,300" fill="#160B3D" opacity=".55"/>
+</svg>
