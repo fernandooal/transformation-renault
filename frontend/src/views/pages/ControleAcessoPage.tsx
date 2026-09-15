@@ -12,7 +12,7 @@ export default function ControleAcessoPage() {
       <Card padding="none">
         <EmptyState
           title="Tela em construção"
-          description="O Figma ainda não tem esta tela. A matriz de permissões dos 7 cargos entra aqui."
+          description="A matriz de permissões dos 7 cargos."
         />
       </Card>
     </>
