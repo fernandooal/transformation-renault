@@ -4,6 +4,8 @@ import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import { fileSource } from "../../services/document.service";
+import { Button } from "../components/ui";
+import PageHeader from "../components/PageHeader";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -19,15 +21,10 @@ export default function DocumentViewPage() {
   const file = useMemo(() => fileSource(id), [id]);
 
   return (
-    <div className="page">
-      <header className="topbar">
-        <Link to="/" className="ghost">
-          ← Voltar
-        </Link>
-        <h1>Visualização de documento</h1>
-      </header>
+    <>
+      <PageHeader title="Documento F4" back={{ to: "/f4", label: "Voltar" }} />
 
-      <main className="pdf-viewer">
+      <div className="pdf-viewer">
         {error && <p className="error">Falha ao carregar o PDF: {error}</p>}
         <Document
           file={file}
@@ -39,22 +36,23 @@ export default function DocumentViewPage() {
         </Document>
         {numPages && (
           <div className="pdf-controls">
-            <button className="ghost" disabled={page <= 1} onClick={() => setPage(page - 1)}>
+            <Button variant="ghost" size="sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>
               Anterior
-            </button>
+            </Button>
             <span className="muted">
               Página {page} de {numPages}
             </span>
-            <button
-              className="ghost"
+            <Button
+              variant="ghost"
+              size="sm"
               disabled={page >= numPages}
               onClick={() => setPage(page + 1)}
             >
               Próxima
-            </button>
+            </Button>
           </div>
         )}
-      </main>
-    </div>
+      </div>
+    </>
   );
 }

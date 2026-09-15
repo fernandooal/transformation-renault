@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useChat } from "../../controllers/useChat";
+import { Button } from "./ui";
 
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
@@ -35,9 +36,9 @@ export default function Chatbot() {
               placeholder="Digite sua dúvida..."
               maxLength={4000}
             />
-            <button type="submit" disabled={sending || !input.trim()}>
+            <Button type="submit" size="sm" disabled={sending || !input.trim()}>
               Enviar
-            </button>
+            </Button>
           </form>
         </div>
       )}

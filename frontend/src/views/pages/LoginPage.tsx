@@ -1,40 +1,47 @@
+import { Link } from "react-router-dom";
 import { useLogin } from "../../controllers/useLogin";
+import { Button, Checkbox, GlassCard, PasswordField, TextField } from "../components/ui";
 
 export default function LoginPage() {
-  const { username, setUsername, password, setPassword, error, loading, submit } = useLogin();
+  const { email, setEmail, password, setPassword, remember, setRemember, error, loading, submit } =
+    useLogin();
 
   return (
-    <div className="login-page">
-      <form className="login-card" onSubmit={submit}>
-        <h1>
-          Renault <span>Transformation Day</span>
-        </h1>
-        <p className="muted">Acesso à DEMO — documentação F4</p>
-        <label>
-          Usuário
-          <input
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            autoComplete="username"
-            required
-          />
-        </label>
-        <label>
-          Senha
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-            required
-          />
-        </label>
-        {error && <p className="error">{error}</p>}
-        <button type="submit" disabled={loading}>
+    <GlassCard title="Seja Bem-Vindo!">
+      <form onSubmit={submit} className="u-stack" style={{ gap: "var(--space-5)" }}>
+        <TextField
+          label="E-mail"
+          type="email"
+          value={email}
+          onChange={setEmail}
+          tone="onDark"
+          variant="inField"
+          autoComplete="username"
+          required
+        />
+        <PasswordField
+          label="Senha"
+          value={password}
+          onChange={setPassword}
+          tone="onDark"
+          variant="inField"
+          required
+        />
+        <Checkbox label="Lembre de mim" checked={remember} onChange={setRemember} tone="onDark" />
+
+        {error && <p className="field-error field-error--onDark" role="alert">{error}</p>}
+
+        <Button type="submit" variant="onDark" size="lg" block loading={loading}>
           {loading ? "Entrando..." : "Entrar"}
-        </button>
-        <p className="muted small">Demo: usuário `demo` / senha `demo123`</p>
+        </Button>
       </form>
-    </div>
+
+      <div className="auth-links">
+        <Link to="/recuperar-senha">Esqueci minha senha</Link>
+        <span>
+          É novo por aqui? <Link to="/cadastro">Cadastre-se</Link>
+        </span>
+      </div>
+    </GlassCard>
   );
 }

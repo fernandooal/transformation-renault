@@ -1,0 +1,108 @@
+/* Badges de status — pares cor-do-texto / fundo-do-texto do style-guide. */
+
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  background: var(--badge-bg);
+  color: var(--badge-fg);
+}
+
+.badge-pill--sm {
+  height: 22px;
+  padding: 0 var(--space-3);
+  font-size: 11px;
+}
+.badge-pill--md {
+  height: 26px;
+  padding: 0 var(--space-3);
+  font-size: var(--text-xs);
+}
+
+.badge-pill__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+
+.badge-pill--blue {
+  --badge-bg: var(--c-blue-50);
+  --badge-fg: var(--c-blue-600);
+}
+.badge-pill--orange {
+  --badge-bg: var(--c-orange-50);
+  --badge-fg: var(--badge-fg-orange);
+}
+.badge-pill--green {
+  --badge-bg: var(--c-green-50);
+  --badge-fg: var(--badge-fg-green);
+}
+.badge-pill--red {
+  --badge-bg: #fbebeb;
+  --badge-fg: var(--c-red-700);
+}
+.badge-pill--purple {
+  --badge-bg: var(--c-purple-100);
+  --badge-fg: var(--color-primary);
+}
+.badge-pill--teal {
+  --badge-bg: #e2f8f6;
+  --badge-fg: var(--badge-fg-teal);
+}
+.badge-pill--neutral {
+  --badge-bg: var(--c-gray-75);
+  --badge-fg: var(--color-text-muted);
+}
+
+/* badge sólido de cargo, usado em "Partes Envolvidas" */
+.badge-pill--role {
+  --badge-bg: var(--c-purple-300);
+  --badge-fg: var(--color-text-on-dark);
+}
+
+/* Avatar */
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  flex: none;
+  background: var(--c-gray-200);
+}
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Pílulas de etapa da coluna "Fluxo / Voltas" */
+.stage-pills {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.stage-pills__pill {
+  width: 26px;
+  height: 7px;
+  border-radius: var(--radius-pill);
+  background: var(--c-purple-100);
+}
+.stage-pills__pill.is-done {
+  background: var(--c-teal-300);
+}
+.stage-pills__returns {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: var(--space-1);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}

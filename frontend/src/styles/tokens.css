@@ -1,0 +1,159 @@
+/* ============================================================================
+   RGdB — Design tokens
+   Fonte: style-guide do Figma (Cores.png, Seções.png, Tipografia.png).
+   Regra do projeto: nenhum arquivo além deste escreve valores hex.
+   ========================================================================== */
+
+:root {
+  /* --- Nível 1: paleta bruta ------------------------------------------------
+     Primárias (75% das comunicações) e auxiliares (até 25%), conforme o
+     style-guide. Nomes sem semântica: use os tokens do nível 2 nos componentes. */
+
+  /* primárias */
+  --c-purple-900: #160b3d; /* fundo das telas de autenticação */
+  --c-purple-800: #27057d;
+  --c-purple-700: #310a8a;
+  --c-purple-600: #4713a4; /* primária da marca */
+  --c-purple-500: #2307af;
+  --c-purple-300: #8467ad;
+  --c-purple-100: #e0d9ec;
+  --c-purple-600-70: #4713a4b2;
+
+  --c-white: #ffffff;
+  --c-white-warm: #fffbfb;
+  --c-gray-50: #f9f8fc; /* hover em componentes com fundo branco */
+  --c-gray-75: #f4f5f7;
+  --c-gray-100: #e7e7e7; /* fundo do app */
+  --c-gray-150: #e6e6e6; /* stroke de 1px */
+  --c-gray-200: #dcdcdc;
+  --c-gray-10: #d4d4d41a;
+  --c-black: #000000;
+  --c-black-15: #00000026;
+  --c-black-10: #0000001a;
+
+  /* auxiliares */
+  --c-teal-300: #66d8d0;
+  --c-blue-400: #4b9af6;
+  --c-blue-400-31: #4b9af64f;
+
+  /* semânticas de status (pares cor-do-texto / fundo-do-texto) */
+  --c-blue-600: #2563eb;
+  --c-blue-50: #eaf0fe;
+  --c-orange-600: #e8590c;
+  --c-orange-50: #fdeee3;
+  --c-orange-500: #ff6200;
+  --c-orange-300: #f0a868;
+  --c-green-500: #4ec52d;
+  --c-green-700: #399c1d;
+  --c-green-50: #4ec52d30;
+  --c-red-500: #fb131b;
+  --c-red-700: #981621;
+
+  /* --- Nível 2: semânticos — é isto que os componentes usam ---------------- */
+  --color-bg-app: var(--c-gray-100);
+  --color-bg-auth: var(--c-purple-900);
+  --color-surface: var(--c-white);
+  --color-surface-muted: var(--c-gray-75);
+  --color-surface-hover: var(--c-gray-50);
+  --color-border: var(--c-gray-150);
+  --color-border-strong: var(--c-gray-200);
+  --color-border-subtle: var(--c-black-10);
+
+  --color-text: var(--c-purple-900);
+  --color-text-brand: var(--c-purple-600);
+  --color-text-muted: #5b5471;
+  --color-text-faint: var(--c-purple-300);
+  --color-text-on-dark: var(--c-white);
+  --color-text-on-primary: var(--c-white);
+
+  --color-primary: var(--c-purple-600);
+  --color-primary-strong: var(--c-purple-800);
+  --color-primary-soft: var(--c-purple-100);
+  --color-focus: var(--c-blue-400);
+  --color-focus-ring: var(--c-blue-400-31);
+
+  --color-positive: var(--c-green-700);
+  --color-negative: var(--c-red-700);
+
+  /* Texto dos badges.
+     O style-guide define os pares "cor do texto / fundo do texto", mas em
+     12px o verde dá 3,03:1 e o laranja 3,16:1 contra o próprio fundo —
+     abaixo do mínimo de 4,5:1 para texto pequeno. Estes tons são os mesmos
+     matizes escurecidos até passar. Para voltar ao literal do style-guide,
+     troque as três linhas abaixo pelas cores originais (comentadas). */
+  --badge-fg-green: #2d7b17;  /* style-guide: var(--c-green-700) #399C1D */
+  --badge-fg-orange: #bc480a; /* style-guide: var(--c-orange-600) #E8590C */
+  --badge-fg-teal: #1b7c74;
+
+  /* --- Gradientes ---------------------------------------------------------- */
+  --gradient-brand: linear-gradient(266.51deg, #2307af 2.26%, #8467ad 104.26%);
+  --gradient-brand-vertical: linear-gradient(172.85deg, #2307af -47.33%, #8467ad 125.53%);
+  --gradient-brand-soft: linear-gradient(
+    90.16deg,
+    rgba(132, 103, 173, 0.78) 0.14%,
+    rgba(35, 7, 175, 0.78) 136.18%
+  );
+  --gradient-glass: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.05) 50%
+  );
+
+  /* --- Sombras — medidas no style-guide (X1 Y1 blur5 spread0 #000 15%) ----- */
+  --shadow-card: 1px 1px 5px var(--c-black-15);
+  --shadow-card-hover: 0 6px 20px var(--c-black-15);
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.28);
+  --shadow-modal: 0 24px 64px var(--c-black-15);
+
+  /* --- Raios --------------------------------------------------------------- */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px; /* padrão dos cards */
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* --- Espaçamento --------------------------------------------------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 48px;
+  --space-10: 64px;
+
+  /* --- Tipografia — Poppins (títulos) + Lato (corpo e números) ------------- */
+  --font-display: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-body: "Lato", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-md: 16px;
+  --text-lg: 20px;
+  --text-xl: 24px;
+  --text-2xl: 28px;
+  --text-3xl: 34px;
+  --text-kpi: 64px; /* Lato 64px, medido no style-guide */
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-black: 900;
+
+  /* --- Layout -------------------------------------------------------------- */
+  --sidebar-w: 300px;
+  --content-max: 1360px;
+  --content-pad: 48px;
+  --control-h: 48px;
+  --control-h-lg: 56px;
+  --row-h: 68px;
+  --auth-card-w: 505px;
+
+  /* --- Empilhamento -------------------------------------------------------- */
+  --z-sidebar: 20;
+  --z-chatbot: 80;
+  --z-modal: 100;
+}

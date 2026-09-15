@@ -1,0 +1,41 @@
+/* Faixa roxa de filtros com chips em pílula contornada. */
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-6);
+  background: var(--color-primary);
+  border-radius: var(--radius-xl);
+  overflow-x: auto;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: 40px;
+  padding: 0 var(--space-6);
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: transparent;
+  color: var(--color-text-on-dark);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.chip:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+.chip[aria-pressed="true"] {
+  background: var(--color-surface);
+  color: var(--color-primary);
+  border-color: var(--color-surface);
+  font-weight: var(--weight-semibold);
+}
+.chip__count {
+  font-weight: var(--weight-bold);
+}
