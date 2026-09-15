@@ -10,10 +10,7 @@ export default function FornecedoresPage() {
         subtitle="Empresas que preenchem e reenviam as F4."
       />
       <Card padding="none">
-        <EmptyState
-          title="Tela em construção"
-          description="O Figma ainda não tem esta tela."
-        />
+        <EmptyState title="Tela em construção" />
       </Card>
     </>
   );
