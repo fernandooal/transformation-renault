@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import PageHeader from "../components/PageHeader";
 import {
   Avatar,
+  Button,
   Card,
   DataTable,
   EmptyState,
@@ -12,7 +13,9 @@ import {
 } from "../components/ui";
 import type { Column } from "../components/ui";
 import { Icon } from "../components/icons";
+import ExportF4Modal from "../components/f4/ExportF4Modal";
 import { useF4List } from "../../controllers/useF4List";
+import { useF4Export } from "../../controllers/useF4Export";
 import { relativeTime } from "../../utils/datetime";
 import { partNumber } from "../../utils/format";
 import { roleMeta } from "../../models/roles";
@@ -98,8 +101,9 @@ const COLUMNS: Array<Column<F4Summary>> = [
 
 export default function TodasAsF4sPage() {
   const navigate = useNavigate();
-  const { rows, counts, filters, activeFilter, setActiveFilter, query, setQuery, error } =
+  const { all, rows, counts, filters, activeFilter, setActiveFilter, query, setQuery, error } =
     useF4List();
+  const exporter = useF4Export(all, rows);
 
   return (
     <>
@@ -118,7 +122,35 @@ export default function TodasAsF4sPage() {
         items={filters.map((f) => ({ id: f.id, label: f.label, count: counts[f.id] ?? 0 }))}
         value={activeFilter}
         onChange={setActiveFilter}
+        trailing={
+          <Button
+            className="btn--onFilterBar"
+            icon={<Icon name="download" size={18} />}
+            onClick={() => exporter.setOpen(true)}
+          >
+            Exportar
+          </Button>
+        }
       />
+
+      {exporter.selectionMode && (
+        <div className="selection-bar">
+          <span className="selection-bar__count">
+            {exporter.selected.size}{" "}
+            {exporter.selected.size === 1 ? "F4 selecionada" : "F4's selecionadas"}
+          </span>
+          <Button variant="ghost" onClick={exporter.cancelSelection}>
+            Cancelar
+          </Button>
+          <Button
+            icon={<Icon name="download" size={18} />}
+            onClick={() => exporter.setOpen(true)}
+            disabled={exporter.selected.size === 0}
+          >
+            Exportar seleção
+          </Button>
+        </div>
+      )}
 
       {error && <p className="error">{error}</p>}
 
@@ -129,6 +161,16 @@ export default function TodasAsF4sPage() {
           rows={rows}
           getRowKey={(r) => r.id}
           onRowClick={(r) => navigate(`/f4/${r.id}`)}
+          selection={
+            exporter.selectionMode
+              ? {
+                  selected: exporter.selected,
+                  onToggle: (r) => exporter.toggle(r.id),
+                  onToggleAll: exporter.toggleAll,
+                  rowLabel: (r) => `Selecionar ${r.code}`,
+                }
+              : undefined
+          }
           empty={
             <EmptyState
               title="Nenhuma F4 encontrada"
@@ -137,6 +179,8 @@ export default function TodasAsF4sPage() {
           }
         />
       </Card>
+
+      <ExportF4Modal x={exporter} />
     </>
   );
 }

@@ -246,3 +246,137 @@
   font-size: var(--text-sm);
   color: var(--color-text-muted);
 }
+
+/* --- documentos e assinaturas --- */
+.sign-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.sign-progress__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+}
+.sign-progress__title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-brand);
+}
+.sign-progress__count {
+  margin-left: auto;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+.sign-progress__track {
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--c-purple-100);
+  overflow: hidden;
+}
+.sign-progress__bar {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+  transition: width 0.2s ease;
+}
+
+.doc-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.doc-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.doc-card__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border-radius: var(--radius-md);
+  background: var(--c-purple-100);
+  color: var(--color-primary);
+}
+.doc-card__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+.doc-card__name {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-brand);
+}
+.doc-card__meta {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+.doc-card__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+.signatures {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.signature {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+}
+.signature.is-next {
+  background: var(--c-blue-50);
+}
+.signature__mark {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--c-gray-100);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+}
+.signature.is-signed .signature__mark {
+  background: var(--c-green-50);
+  color: var(--c-green-700);
+}
+.signature.is-next .signature__mark {
+  background: var(--c-blue-400);
+  color: var(--color-text-on-dark);
+}
+.signature__name {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-brand);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.signature__when {
+  margin-left: auto;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}

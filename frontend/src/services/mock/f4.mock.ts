@@ -10,6 +10,7 @@
 import type { F4Checkpoint, F4Detail, F4HistoryEntry, F4Summary, Person } from "../../models/f4";
 import type { F4Status } from "../../models/status";
 import { PEOPLE } from "./people";
+import { documentsFor } from "./documents.mock";
 
 const hoursAgo = (h: number) => new Date(Date.now() - h * 3600_000).toISOString();
 const daysAgo = (d: number) => hoursAgo(d * 24);
@@ -118,6 +119,7 @@ export const F4_DETAILS: F4Detail[] = SEEDS.map((seed) => ({
   parties: partiesFor(seed),
   history: historyFor(seed),
   checkpoints: checkpoints(Math.min(seed.stagesDone, 3), (seed.responsible ?? PEOPLE.leticia).name),
+  documents: documentsFor(seed),
 }));
 
 export const F4_LIST: F4Summary[] = F4_DETAILS;

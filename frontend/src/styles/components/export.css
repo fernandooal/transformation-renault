@@ -1,0 +1,149 @@
+/* Exportação de F4s: botão na barra roxa, modal de recorte e modo de seleção. */
+
+.btn--onFilterBar {
+  background: var(--color-surface);
+  color: var(--color-primary);
+  border: 1px solid var(--color-surface);
+}
+.btn--onFilterBar:hover:not(:disabled) {
+  background: var(--color-surface-hover);
+}
+
+/* --- modal --- */
+.modal--form {
+  align-items: stretch;
+  text-align: left;
+  gap: var(--space-5);
+}
+.modal--form .modal__title {
+  text-align: left;
+}
+
+.export-scope {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.export-option {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color 0.12s ease, background-color 0.12s ease;
+}
+.export-option:hover {
+  background: var(--color-surface-hover);
+}
+.export-option:has(input:checked) {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+.export-option input {
+  margin-top: 3px;
+  accent-color: var(--color-primary);
+  flex: none;
+}
+.export-option__label {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-brand);
+}
+.export-option__hint {
+  display: block;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-weight: var(--weight-regular);
+}
+
+.export-period {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  padding-left: var(--space-8);
+}
+
+.export-format {
+  display: flex;
+  gap: var(--space-3);
+}
+.export-format .chip {
+  color: var(--color-primary);
+  border-color: var(--color-border-strong);
+}
+.export-format .chip[aria-pressed="true"] {
+  background: var(--color-primary);
+  color: var(--color-text-on-primary);
+  border-color: var(--color-primary);
+}
+
+.export-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+/* --- modo de seleção na tabela --- */
+.selection-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-6);
+  background: var(--color-primary-soft);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+.selection-bar__count {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-brand);
+  margin-right: auto;
+}
+
+.data-table__select {
+  width: 56px;
+  text-align: center;
+}
+.data-table__select input {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+  vertical-align: middle;
+}
+.data-table__select input::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  transform: scale(0);
+  transition: transform 0.12s ease;
+  box-shadow: inset 1em 1em var(--color-primary);
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+.data-table__select input:checked::after {
+  transform: scale(1);
+}
+.data-table__select input:indeterminate::after {
+  transform: scale(1);
+  clip-path: inset(42% 10% 42% 10%);
+}
+.data-table tbody tr.is-selected {
+  background: var(--color-primary-soft);
+}

@@ -22,6 +22,6 @@ export { default as Skeleton } from "./Skeleton";
 export { default as FilterChips } from "./FilterChips";
 export type { FilterChipItem } from "./FilterChips";
 export { default as DataTable } from "./DataTable";
-export type { Column } from "./DataTable";
+export type { Column, TableSelection } from "./DataTable";
 export { default as Tabs } from "./Tabs";
 export { default as Modal } from "./Modal";
