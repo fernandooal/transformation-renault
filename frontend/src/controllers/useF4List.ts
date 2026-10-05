@@ -46,6 +46,7 @@ export function useF4List() {
   }, [searched, activeFilter]);
 
   return {
+    all,
     rows,
     counts,
     filters: F4_FILTERS,

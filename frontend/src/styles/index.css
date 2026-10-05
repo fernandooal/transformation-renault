@@ -15,6 +15,7 @@
 @import "./components/chart.css";
 @import "./components/f4-detail.css";
 @import "./components/modal.css";
+@import "./components/export.css";
 
 /* Herdado da DEMO monocromática; encolhe a cada etapa. */
 @import "./legacy.css";

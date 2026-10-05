@@ -1,15 +1,17 @@
 import { useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { cx } from "../../../utils/cx";
 
 export interface ModalProps {
   open: boolean;
   onClose: () => void;
   title?: string;
+  className?: string;
   children: ReactNode;
 }
 
-export default function Modal({ open, onClose, title, children }: ModalProps) {
+export default function Modal({ open, onClose, title, className, children }: ModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
 
@@ -39,7 +41,7 @@ export default function Modal({ open, onClose, title, children }: ModalProps) {
     >
       <div
         ref={panelRef}
-        className="modal"
+        className={cx("modal", className)}
         role="dialog"
         aria-modal="true"
         aria-label={title}

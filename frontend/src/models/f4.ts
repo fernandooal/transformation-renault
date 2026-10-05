@@ -27,6 +27,28 @@ export interface F4HistoryEntry {
   tagTone?: Tone;
 }
 
+export interface F4Signature {
+  signer: Person;
+  /** Ordem da fila de assinatura. */
+  order: number;
+  signedAt: string | null;
+}
+
+export type F4DocumentKind = "TERMO" | "ANEXO_TECNICO" | "PLANILHA_CUSTOS" | "RELATORIO";
+
+export interface F4DocumentFile {
+  id: string;
+  name: string;
+  kind: F4DocumentKind;
+  version: string;
+  addedAt: string;
+  sizeKb: number;
+  requiresSignature: boolean;
+  signatures: F4Signature[];
+  /** Rota do visualizador de PDF; null quando o arquivo é só anexo. */
+  pdfPath: string | null;
+}
+
 export interface F4Checkpoint {
   id: string;
   label: string;
@@ -60,8 +82,39 @@ export interface F4Detail extends F4Summary {
   parties: Person[];
   history: F4HistoryEntry[];
   checkpoints: F4Checkpoint[];
+  documents: F4DocumentFile[];
   technicalReturns: number;
   commercialReturns: number;
+}
+
+export interface DocumentState {
+  total: number;
+  signed: number;
+  pending: F4Signature[];
+  /** Próximo da fila: só ele pode assinar. */
+  next: F4Signature | null;
+  complete: boolean;
+}
+
+export function documentState(doc: F4DocumentFile): DocumentState {
+  const ordered = [...doc.signatures].sort((a, b) => a.order - b.order);
+  const pending = ordered.filter((s) => !s.signedAt);
+  return {
+    total: ordered.length,
+    signed: ordered.length - pending.length,
+    pending,
+    next: pending[0] ?? null,
+    complete: doc.requiresSignature && pending.length === 0,
+  };
+}
+
+/** Progresso da aba: documentos que exigem assinatura e já estão completos. */
+export function signatureProgress(docs: F4DocumentFile[]): { done: number; total: number } {
+  const required = docs.filter((d) => d.requiresSignature);
+  return {
+    done: required.filter((d) => documentState(d).complete).length,
+    total: required.length,
+  };
 }
 
 /** "3ª Volta • 2 Devoluções Técnicas, 1 Comercial" */

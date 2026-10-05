@@ -67,13 +67,15 @@ frontend/
     ├── App.tsx            mapa de rotas (AuthLayout · AppLayout)
     ├── assets/            logo RGdB e arte de fundo das telas de autenticação
     ├── models/            domínio: status, roles, f4, dashboard, auth, navigation,
-    │                      e o schema do formulário F4 (f4Form)
+    │                      o schema do formulário F4 (f4Form) e as colunas da
+    │                      exportação (f4Export)
     ├── services/          acesso a dados (http, auth, f4, dashboard, document, chat)
     │   └── mock/          dataset da DEMO no domínio da mentoria
     ├── controllers/       hooks com estado e regras (useLogin, useCadastro,
     │                      useRecuperarSenha, useDashboard, useF4List, useF4Detail,
-    │                      useF4Form, useChat, AuthContext)
-    ├── utils/             funções puras (cx, format, datetime, validation, geometry)
+    │                      useF4Form, useF4Export, useChat, AuthContext)
+    ├── utils/             funções puras (cx, format, datetime, validation, geometry,
+    │                      spreadsheet)
     ├── styles/            tokens.css · base · utilities · layout · components/* · legacy
     └── views/
         ├── layouts/       AuthLayout (fundo escuro + card de vidro) e AppLayout (sidebar)
@@ -83,7 +85,8 @@ frontend/
             ├── ui/        primitivos (Button, TextField, Card, DataTable, Modal…)
             ├── icons/     SVGs próprios, um Icon tipado por nome
             ├── charts/    StackedBarChart, PieChart, ChartLegend (SVG próprio)
-            └── f4/        peças da tela de detalhe (fluxo, timeline, partes)
+            └── f4/        peças da F4 (fluxo, timeline, partes, documentos e
+                           assinaturas, modal de exportação)
 ```
 
 Fluxo de uma tela:
@@ -94,7 +97,8 @@ view (JSX) → controller (hook) → service (fetch ou mock) → API
 
 - **Model** — formato dos dados e vocabulário do domínio. `models/status.ts` é o
   **ponto único de verdade** dos 8 status da F4: mudar rótulo, cor ou agrupamento de
-  filtro é um arquivo só. `models/f4Form.ts` descreve o formulário F4 inteiro em dados.
+  filtro é um arquivo só. `models/f4Form.ts` descreve o formulário F4 inteiro em dados,
+  e `models/f4Export.ts` as colunas que saem no arquivo exportado.
 - **Service** — única camada que conhece URLs, `fetch` e os mocks; injeta o JWT e
   normaliza erros.
 - **Controller** — hooks que guardam estado, filtram, calculam e chamam os services.

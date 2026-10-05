@@ -7,7 +7,22 @@
   padding: var(--space-4) var(--space-6);
   background: var(--color-primary);
   border-radius: var(--radius-xl);
+}
+
+.filter-bar__chips {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-width: 0;
   overflow-x: auto;
+}
+
+.filter-bar__trailing {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-left: auto;
+  padding-left: var(--space-4);
 }
 
 .chip {

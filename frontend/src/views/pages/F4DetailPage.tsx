@@ -7,6 +7,7 @@ import PartiesCard from "../components/f4/PartiesCard";
 import ContinuityCard from "../components/f4/ContinuityCard";
 import HistoryTimeline from "../components/f4/HistoryTimeline";
 import CommentComposer from "../components/f4/CommentComposer";
+import DocumentsPanel from "../components/f4/DocumentsPanel";
 import { useF4Detail } from "../../controllers/useF4Detail";
 import type { DetailTab } from "../../controllers/useF4Detail";
 import { returnsSummary } from "../../models/f4";
@@ -133,9 +134,10 @@ export default function F4DetailPage() {
           )}
 
           {s.tab === "documentos" && (
-            <EmptyState
-              title="Documentos e Assinaturas"
-              description="A assinatura digital ICP-Brasil está mockada nesta fase: o botão 'Aprovar e Assinar' registra o evento no histórico, sem certificado real."
+            <DocumentsPanel
+              documents={f4.documents}
+              currentUser={s.currentUser}
+              onSign={s.sign}
             />
           )}
         </Tabs>
