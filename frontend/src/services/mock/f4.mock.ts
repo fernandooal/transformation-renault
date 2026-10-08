@@ -84,34 +84,38 @@ const SEEDS: Seed[] = [
 ];
 
 function historyFor(seed: Seed): F4HistoryEntry[] {
+  // O ciclo precisa variar por F4, senão toda métrica de tempo sai idêntica e
+  // qualquer filtro do dashboard devolve o mesmo número.
+  const span = 4 + (seed.id % 5) * 2.5 + seed.returns; // ~4 a 18 dias
+  const open = (n: number) => daysAgo(span * n);
   const s = seed.supplier;
   const pfe = seed.responsible ?? PEOPLE.leticia;
   const list: F4HistoryEntry[] = [
-    entry(s, "submission", daysAgo(7), `Submissão inicial da F4 (v1) — proposta de fabricação do ${seed.part.toLowerCase()}.`, "v1 · abertura", "neutral"),
+    entry(s, "submission", open(1), `Submissão inicial da F4 (v1) — proposta de fabricação do ${seed.part.toLowerCase()}.`, "v1 · abertura", "neutral"),
   ];
 
   if (seed.technicalReturns > 0) {
     list.push(
-      entry(pfe, "return", daysAgo(5), "Devolvida para revisão técnica. Material proposto abaixo do especificado; solicitado retorno ao grade anterior na v2.", "1ª devolução técnica", "orange")
+      entry(pfe, "return", open(0.72), "Devolvida para revisão técnica. Material proposto abaixo do especificado; solicitado retorno ao grade anterior na v2.", "1ª devolução técnica", "orange")
     );
   }
   if (seed.commercialReturns > 0) {
     list.push(
-      entry(PEOPLE.rafael, "comment", daysAgo(3), "Do lado comercial, a v2 fica acima do target por causa da alteração extra. Se a engenharia aprovar a redução, o gap fecha.", "mini-aprovação comercial condicional", "green")
+      entry(PEOPLE.rafael, "comment", open(0.45), "Do lado comercial, a v2 fica acima do target por causa da alteração extra. Se a engenharia aprovar a redução, o gap fecha.", "mini-aprovação comercial condicional", "green")
     );
   }
   if (seed.stagesDone >= 2) {
     list.push(
-      entry(PEOPLE.rafael, "checkpoint", daysAgo(2), "Validação dimensional concluída — criado em conjunto com a engenharia. Cotas principais dentro da tolerância.", "Marco", "purple")
+      entry(PEOPLE.rafael, "checkpoint", open(0.3), "Validação dimensional concluída — criado em conjunto com a engenharia. Cotas principais dentro da tolerância.", "Marco", "purple")
     );
   }
   if (seed.technicalReturns > 1) {
     list.push(
-      entry(pfe, "return", hoursAgo(30), "Devolvida para revisão técnica. A furação atual compromete a dissipação de calor; reduzir o número de furos ou justificar com relatório de ensaio.", `${seed.technicalReturns}ª devolução técnica`, "orange")
+      entry(pfe, "return", open(0.18), "Devolvida para revisão técnica. A furação atual compromete a dissipação de calor; reduzir o número de furos ou justificar com relatório de ensaio.", `${seed.technicalReturns}ª devolução técnica`, "orange")
     );
   }
   list.push(
-    entry(s, "submission", hoursAgo(8), `Reenvio da ${seed.version} atendendo à devolução anterior. Ajustes aplicados e ferramental já validado.`, `${seed.version} · 3 campos alterados`, "blue")
+    entry(s, "submission", open(0.05), `Reenvio da ${seed.version} atendendo à devolução anterior. Ajustes aplicados e ferramental já validado.`, `${seed.version} · 3 campos alterados`, "blue")
   );
 
   return list.sort((a, b) => (a.at < b.at ? 1 : -1));
