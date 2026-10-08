@@ -1,13 +1,17 @@
 import { Link } from "react-router-dom";
 import { useF4Form } from "../../controllers/useF4Form";
+import { useF4Assistant } from "../../controllers/useF4Assistant";
 import { SECTIONS, SET_ROWS, fmt, num, slug, str } from "../../models/f4Form";
 import F4Field from "../components/F4Field";
+import F4AssistantPanel from "../components/f4/F4AssistantPanel";
 import { Button, Card, buttonClass } from "../components/ui";
 import PageHeader from "../components/PageHeader";
 
 export default function NewF4Page() {
   const { form, setField, setTotal, totalImpact, unitImpact, error, saving, submit, fillWithAI } =
     useF4Form();
+
+  const assistant = useF4Assistant(form, totalImpact);
 
   const currency = str(form.offerCurrency) || "EUR";
   const units = str(form.units) || "Part";
@@ -25,7 +29,8 @@ export default function NewF4Page() {
         }
       />
 
-      <div className="f4-page">
+      <div className="f4-layout">
+        <div className="f4-page">
         <p className="muted small">RPIFDASIA20170007 — V251028 · RENAULT — CONFIDENTIAL C</p>
         {error && (
           <p className="error" role="alert">
@@ -133,6 +138,13 @@ export default function NewF4Page() {
             </Button>
           </div>
         </form>
+        </div>
+
+        <F4AssistantPanel
+          report={assistant.report}
+          thinking={assistant.thinking}
+          onApply={(field, value) => setField(field, value)}
+        />
       </div>
     </>
   );

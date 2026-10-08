@@ -131,11 +131,26 @@ métricas de dashboard. Enquanto isso, o frontend serve um dataset próprio:
 |---|---|---|
 | `VITE_MOCK_API` | `true` | dataset de F4 (10 documentos nos 8 status) e números do dashboard |
 | `VITE_MOCK_AUTH` | `true` | cadastro e recuperação de senha (código fixo `1790`) |
+| `VITE_AI_ASSISTANT` | vazio | assistente da tela de Nova F4: vazio usa o motor de regras local; `live` pede as sugestões ao modelo via `/api/chat` |
 
 O login é **real** em qualquer caso: `auth.service.ts` envia `{ email, username, password }`
 enquanto o backend for username-only — é o único ponto do frontend que conhece a
 divergência. Os números do dashboard marcados `// MOCK —` em `services/mock/dashboard.mock.ts`
 são os que dependem do histórico de workflow; o resto é derivado do dataset.
+
+#### Assistente da F4 (POC)
+
+A tela de Nova F4 tem um painel que compara o preenchimento com o histórico e
+aponta o que costuma causar devolução. Por padrão as sugestões saem de um motor
+de regras em `services/mock/assistant.mock.ts`, ancorado em `F4_DETAILS`: toda
+estatística citada é calculada, nenhuma é inventada, e a tela se identifica como
+"IA · simulada".
+
+Com `VITE_AI_ASSISTANT=live` as mesmas sugestões passam a ser pedidas ao modelo
+pelo endpoint `/api/chat` que já existe (requer `GEMINI_API_KEY` no
+`backend/.env`), e o selo muda para "IA". Qualquer falha — sem chave, cota
+estourada, JSON malformado — cai de volta nas regras, então a tela nunca quebra.
+Desligar depois é remover a variável: nenhum caminho de código sai.
 
 ## Como rodar
 

@@ -434,3 +434,164 @@
     align-items: start;
   }
 }
+
+/* ===== Assistente de preenchimento (POC de IA) ===================== */
+
+/* a tela de criação passa a ter o formulário e o assistente lado a lado */
+.f4-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: var(--space-6);
+  align-items: start;
+}
+@media (max-width: 1280px) {
+  .f4-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.assistant {
+  position: sticky;
+  top: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--c-lavender-100);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  max-height: calc(100vh - var(--space-10));
+  overflow-y: auto;
+}
+
+.assistant__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.assistant__title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-brand);
+}
+.assistant__intro {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+/* medidor de risco */
+.assistant__gauge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border-left: 4px solid var(--c-green-700);
+}
+.assistant__gauge.is-medio {
+  border-left-color: var(--c-orange-600);
+}
+.assistant__gauge.is-alto {
+  border-left-color: var(--c-red-700);
+}
+.assistant__score {
+  font-family: var(--font-body);
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-brand);
+  line-height: 1;
+}
+.assistant__gauge-labels {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.assistant__headline {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.assistant__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.insight {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.insight__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.insight__icon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  flex: none;
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+}
+.insight--risco .insight__icon {
+  background: var(--c-orange-50);
+  color: var(--badge-fg-orange);
+}
+.insight--precedente .insight__icon {
+  background: var(--c-blue-50);
+  color: var(--c-blue-600);
+}
+.insight--sugestao .insight__icon {
+  background: var(--c-green-50);
+  color: var(--badge-fg-green);
+}
+.insight__kind {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+.insight__title {
+  flex-basis: 100%;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  color: var(--color-text-brand);
+}
+.insight__body {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+.insight__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+.insight__source {
+  font-size: var(--text-sm);
+  font-family: var(--font-mono);
+}
+
+.assistant__foot {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
