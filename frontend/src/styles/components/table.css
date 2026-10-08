@@ -98,3 +98,66 @@
   border-radius: 50%;
   flex: none;
 }
+
+/* Cabeçalho ordenável e movível */
+.data-table th.is-sortable {
+  padding: 0 var(--space-5);
+}
+.th-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.th-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) 0;
+  font: inherit;
+  color: inherit;
+  white-space: nowrap;
+}
+.th-sort:hover {
+  color: var(--color-primary);
+}
+.th-caret {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;
+  opacity: 0.45;
+}
+.th-sort.is-active .th-caret {
+  opacity: 1;
+}
+.th-caret.is-up {
+  transform: rotate(180deg);
+}
+
+/* controle de mover coluna: aparece no hover ou no foco do cabeçalho */
+.th-move {
+  display: inline-flex;
+  gap: 1px;
+  padding: 1px;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.data-table th:hover .th-move,
+.th-move:focus-within {
+  opacity: 1;
+}
+.th-move button {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  color: var(--color-text-on-primary);
+  font-size: var(--text-sm);
+  line-height: 1;
+}
+.th-move button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}

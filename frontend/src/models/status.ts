@@ -117,12 +117,12 @@ export interface F4Filter {
 
 export const F4_FILTERS: F4Filter[] = [
   { id: "todas", label: "Todas", matches: () => true },
+  { id: "analise", label: "Em Análise", matches: (s) => s === "IN_REWORK" },
   {
     id: "revisao",
     label: "Em Revisão",
     matches: (s) => s === "TECH_REVIEW" || s === "COMMERCIAL_REVIEW" || s === "FINAL_REVIEW",
   },
-  { id: "alteracao", label: "Em Alteração", matches: (s) => s === "IN_REWORK" },
   { id: "aprovadas", label: "Aprovadas", matches: (s) => s === "APPROVED" },
   { id: "reprovadas", label: "Reprovadas", matches: (s) => s === "REJECTED" },
 ];

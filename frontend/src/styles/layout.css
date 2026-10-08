@@ -112,13 +112,21 @@
   background: var(--color-bg-app);
 }
 
-/* Sidebar recolhida: a coluna some e o conteúdo reflui (o grid de
-   fornecedores passa de 3 para 4 colunas via container query de largura). */
+/* Sidebar recolhida.
+   Precisa ser UMA coluna, não `0 1fr`: com a sidebar em display:none, o
+   skip-link absoluto e o botão fixed, o <main> vira o único item em fluxo e
+   seria colocado na primeira faixa — a de largura zero. */
 .app-layout--collapsed {
-  grid-template-columns: 0 1fr;
+  grid-template-columns: 1fr;
 }
 .app-layout--collapsed .sidebar {
   display: none;
+}
+
+/* Com a sidebar fora, o conteúdo pode respirar — é o que deixa o grid de
+   fornecedores chegar nas 4 colunas do design. */
+.app-layout--collapsed .app-layout__inner {
+  max-width: 1720px;
 }
 
 /* Botão de recolher, colado na borda da sidebar. */
@@ -144,6 +152,14 @@
 .app-layout--collapsed .sidebar-toggle {
   left: 0;
   transform: rotate(-90deg);
+}
+
+/* Abaixo de 1100px o botão passava por cima do título da página. */
+@media (max-width: 1100px) {
+  .sidebar-toggle {
+    top: auto;
+    bottom: var(--space-7);
+  }
 }
 
 .app-layout__main {

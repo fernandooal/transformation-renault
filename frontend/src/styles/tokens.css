@@ -104,6 +104,8 @@
   --badge-fg-green: #2d7b17;  /* literal #399C1D reprovaria com 2,97:1 */
   --badge-fg-orange: #8a3e0a; /* literal do design (balão de devolução) — 6,67:1 */
   --badge-fg-teal: #1b7c74;
+  /* o âmbar do KPI "Diferença $" dá 1,47:1 sobre o próprio tile — ilegível */
+  --badge-fg-amber: #8c7000;
 
   /* --- Gradientes ---------------------------------------------------------- */
   --gradient-brand: linear-gradient(266.51deg, #2307af 2.26%, #8467ad 104.26%);

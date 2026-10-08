@@ -1,0 +1,436 @@
+/* ============================================================================
+   Formulário F4 — NewF4Page + F4Field + tabela SET.
+
+   DERIVAÇÃO: o style-guide RGdB não desenha nenhuma tela de formulário do
+   corpo do app — só as de autenticação (TD5). Então este arquivo não copia
+   uma tela: ele aplica ao formulário denso o que o style-guide de fato
+   especifica em outros lugares.
+     - agrupamento = card (TD4/Seções.png: raio 16px, sombra X1 Y1 B5 preto
+       15%, stroke 1px cinza) = var(--radius-lg) + var(--shadow-card) +
+       var(--color-border) → reutiliza o componente `Card`, sem CSS próprio;
+     - rótulo acima do campo, Poppins SemiBold 14px na cor da marca;
+     - par rótulo/valor somente-leitura = lavanda sobre cinza, padrão medido na
+       aba "Comparar Versões" (TD2);
+     - tabela = mesmos tokens de `.data-table`.
+
+   RAIO DOS CONTROLES = 8px — INTERPOLAÇÃO DELIBERADA, não valor arbitrário.
+   O style-guide só define três raios de caixa: 16px (card), 5px (item de
+   navegação) e pílula 999px (campos de autenticação). A pílula é inviável num
+   formulário de 3 colunas com ~40 campos: ela come o espaço horizontal útil e
+   desalinha rótulo e texto. 8px fica entre o 5px do nav e o 16px do card, e é
+   o único valor desta folha que não sai direto do style-guide.
+   ========================================================================== */
+
+.f4-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  /* o formulário é de leitura linear: 1120px mantém 3 colunas confortáveis
+     sem esticar a linha de texto como o --content-max de 1360px faria */
+  max-width: 1120px;
+}
+
+.f4-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* --- grade de campos ------------------------------------------------------ */
+
+.f4-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+}
+
+.f4-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+/* montadas por template em F4Field (`span-${field.span}`) */
+.f4-field.span-2 {
+  grid-column: span 2;
+}
+.f4-field.span-3 {
+  grid-column: span 3;
+}
+
+.f4-field__label {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-brand);
+  line-height: 1.35;
+}
+
+.f4-field__req {
+  color: var(--c-red-500);
+  font-weight: var(--weight-bold);
+}
+
+/* --- controles ------------------------------------------------------------ */
+
+.f4-control {
+  width: 100%;
+  height: var(--control-h);
+  padding: 0 var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px; /* ver nota de interpolação no topo do arquivo */
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.f4-control::placeholder {
+  color: var(--color-text-faint);
+}
+
+.f4-control:hover:not(:disabled):not(:focus):not(.f4-textarea) {
+  background: var(--color-surface-hover);
+}
+
+.f4-control:focus {
+  outline: none;
+  border-color: var(--color-focus);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+.f4-control:disabled {
+  background: var(--color-surface-muted);
+  color: var(--color-text-faint);
+  cursor: not-allowed;
+}
+
+/* select: mesma caixa do input, chevron desenhado pelo componente Icon */
+.f4-control-wrap {
+  position: relative;
+  display: block;
+}
+
+.f4-control--select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  padding-right: var(--space-8);
+}
+
+.f4-control__chevron {
+  position: absolute;
+  right: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  color: var(--color-text-brand);
+  pointer-events: none;
+}
+
+/* textarea: sem borda, sobre o cinza de textarea do style-guide */
+.f4-textarea {
+  height: auto;
+  min-height: 104px;
+  padding: var(--space-3) var(--space-4);
+  background: var(--c-gray-45);
+  border: 0;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+/* --- checkbox: quadrado 20px, marca e borda em teal quando ativo ---------- */
+
+.f4-field--inline {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+}
+
+.f4-check {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  flex: none;
+  margin: 0;
+  display: grid;
+  place-content: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.12s ease;
+}
+
+.f4-check::after {
+  content: "";
+  width: 11px;
+  height: 11px;
+  transform: scale(0);
+  transition: transform 0.12s ease;
+  box-shadow: inset 1em 1em var(--c-teal-300);
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+.f4-check:checked {
+  border-color: var(--c-teal-300);
+}
+.f4-check:checked::after {
+  transform: scale(1);
+}
+
+.f4-check:focus-visible {
+  outline: none;
+  border-color: var(--color-focus);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+/* --- radio: círculo 20px com ponto na primária ---------------------------- */
+
+.f4-radio-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-6);
+  min-height: var(--control-h);
+}
+
+.f4-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.f4-radio input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  flex: none;
+  margin: 0;
+  display: grid;
+  place-content: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: border-color 0.12s ease;
+}
+
+.f4-radio input::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  transform: scale(0);
+  transition: transform 0.12s ease;
+}
+
+.f4-radio input:checked {
+  border-color: var(--color-primary);
+}
+.f4-radio input:checked::after {
+  transform: scale(1);
+}
+
+.f4-radio input:focus-visible {
+  outline: none;
+  border-color: var(--color-focus);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+/* --- linha de impacto: rótulo | Yes/No | valor ---------------------------- */
+
+.f4-impact {
+  display: grid;
+  grid-template-columns: 1fr auto 220px;
+  align-items: center;
+  gap: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.f4-impact .f4-radio-row {
+  min-height: 0;
+}
+
+.f4-amount {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.f4-amount .f4-control {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.f4-amount__unit {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+}
+
+/* --- somente-leitura: rótulo lavanda sobre valor cinza (TD2) -------------- */
+
+.f4-readout {
+  gap: 2px;
+  justify-content: flex-end;
+}
+
+.f4-readout__label {
+  padding: var(--space-2) var(--space-3);
+  border-radius: 8px 8px 0 0;
+  background: var(--c-lavender-200);
+  color: var(--color-text-brand);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  line-height: 1.35;
+}
+
+.f4-readout__value {
+  padding: var(--space-3) var(--space-4);
+  border-radius: 0 0 8px 8px;
+  background: var(--c-gray-25);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* --- tabela SET ----------------------------------------------------------- */
+
+.f4-set-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+}
+
+.f4-set-table th,
+.f4-set-table td {
+  padding: var(--space-2) var(--space-4);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.f4-set-table thead th {
+  height: 48px;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-brand);
+  background: var(--color-surface-muted);
+  white-space: nowrap;
+}
+.f4-set-table thead th:first-child {
+  border-top-left-radius: var(--radius-md);
+}
+.f4-set-table thead th:last-child {
+  border-top-right-radius: var(--radius-md);
+}
+
+.f4-set-table tbody td {
+  height: 56px;
+  color: var(--color-text);
+}
+
+.f4-set-table th:not(:first-child),
+.f4-set-table td:not(:first-child) {
+  text-align: right;
+  width: 190px;
+}
+
+.f4-set-input {
+  width: 100%;
+  height: 36px;
+  padding: 0 var(--space-3);
+  text-align: right;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.f4-set-input:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border);
+}
+
+.f4-set-input:focus {
+  outline: none;
+  background: var(--color-surface);
+  border-color: var(--color-focus);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+.f4-total-cell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-bold);
+  color: var(--color-text-brand);
+  background: var(--color-surface-muted);
+}
+
+.f4-set-table .f4-total-row td {
+  background: var(--color-primary-soft);
+  color: var(--color-text-brand);
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  border-bottom: 0;
+}
+.f4-set-table .f4-total-row td:first-child {
+  border-bottom-left-radius: var(--radius-md);
+}
+.f4-set-table .f4-total-row td:last-child {
+  border-bottom-right-radius: var(--radius-md);
+}
+
+/* --- rodapé de ações ------------------------------------------------------ */
+
+.f4-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-4);
+}
+
+/* --- responsivo ----------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+  .f4-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .f4-field.span-3 {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 760px) {
+  .f4-grid {
+    grid-template-columns: 1fr;
+  }
+  .f4-field.span-2,
+  .f4-field.span-3 {
+    grid-column: span 1;
+  }
+  .f4-impact {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+}

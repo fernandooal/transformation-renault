@@ -15,9 +15,10 @@ import type { Column } from "../components/ui";
 import { Icon } from "../components/icons";
 import ExportF4Modal from "../components/f4/ExportF4Modal";
 import { useF4List } from "../../controllers/useF4List";
+import { useF4Table } from "../../controllers/useF4Table";
 import { useF4Export } from "../../controllers/useF4Export";
-import { relativeTime } from "../../utils/datetime";
-import { partNumber } from "../../utils/format";
+import { shortDateTime } from "../../utils/datetime";
+import { money, partNumber } from "../../utils/format";
 import { roleMeta } from "../../models/roles";
 import type { F4Summary } from "../../models/f4";
 
@@ -95,15 +96,33 @@ const COLUMNS: Array<Column<F4Summary>> = [
     key: "updated",
     header: "Atualizado",
     align: "center",
-    render: (r) => relativeTime(r.updatedAt),
+    render: (r) => <span className="cell-mono">{shortDateTime(r.updatedAt)}</span>,
+  },
+  {
+    key: "gapComercial",
+    header: "Gap comercial",
+    align: "center",
+    render: (r) => <span className="cell-mono">{money(r.gapComercial, "BRL")}</span>,
+  },
+  {
+    key: "gapTecnico",
+    header: "Gap técnico",
+    align: "center",
+    render: (r) => <span className="cell-mono">{money(r.gapTecnico, "BRL")}</span>,
   },
 ];
+
+const DEFAULT_ORDER = COLUMNS.map((c) => c.key);
 
 export default function TodasAsF4sPage() {
   const navigate = useNavigate();
   const { all, rows, counts, filters, activeFilter, setActiveFilter, query, setQuery, error } =
     useF4List();
   const exporter = useF4Export(all, rows);
+  const table = useF4Table(DEFAULT_ORDER);
+  const orderedColumns = table.order
+    .map((k) => COLUMNS.find((c) => c.key === k))
+    .filter((c): c is Column<F4Summary> => Boolean(c));
 
   return (
     <>
@@ -123,6 +142,15 @@ export default function TodasAsF4sPage() {
         value={activeFilter}
         onChange={setActiveFilter}
         trailing={
+          <>
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={!table.dirty}
+              onClick={table.reset}
+            >
+              Redefinir
+            </Button>
           <Button
             className="btn--onFilterBar"
             icon={<Icon name="download" size={18} />}
@@ -130,6 +158,7 @@ export default function TodasAsF4sPage() {
           >
             Exportar
           </Button>
+          </>
         }
       />
 
@@ -157,8 +186,14 @@ export default function TodasAsF4sPage() {
       <Card padding="none">
         <DataTable
           caption="Lista de F4"
-          columns={COLUMNS}
-          rows={rows}
+          sort={{
+            key: table.sortKey,
+            dir: table.sortDir,
+            onSort: table.toggleSort,
+            onMove: table.moveColumn,
+          }}
+          columns={orderedColumns}
+          rows={table.sortRows(rows)}
           getRowKey={(r) => r.id}
           onRowClick={(r) => navigate(`/f4/${r.id}`)}
           selection={

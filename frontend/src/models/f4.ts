@@ -75,6 +75,9 @@ export interface F4Summary {
   /** Encerramento, eixo separado do status (como no design). */
   outcome: "concluida" | "encerrada" | null;
   updatedAt: string;
+  /** Diferença de preço negociada, em BRL. Não existe no backend: vem do mock. */
+  gapComercial: number;
+  gapTecnico: number;
 }
 
 export interface F4Detail extends F4Summary {
@@ -128,4 +131,35 @@ export function returnsSummary(d: Pick<F4Detail, "returns" | "technicalReturns" 
   }
   const round = `${d.returns}ª Volta`;
   return parts.length ? `${round} • ${parts.join(", ")}` : round;
+}
+
+/** Uma linha da matriz campo × versão da aba "Comparar Versões". */
+export interface F4ComparisonRow {
+  label: string;
+  /** Valor por versão, na mesma ordem de `F4Comparison.versions`. */
+  values: string[];
+}
+
+export interface F4Comparison {
+  versions: string[];
+  /** Índice da versão corrente em `versions`. */
+  currentIndex: number;
+  rows: F4ComparisonRow[];
+}
+
+/**
+ * Direção da mudança de um valor em relação à versão anterior.
+ * Compara o primeiro número do texto ("5 furos", "9,2 mm", "R$ 47,80");
+ * valores sem número, ou iguais, não geram seta.
+ */
+export function valueTrend(current: string, previous: string | undefined): "up" | "down" | null {
+  if (previous === undefined || current === previous) return null;
+  const num = (v: string): number | null => {
+    const m = v.replace(/\./g, "").match(/-?\d+(?:,\d+)?/);
+    return m ? Number(m[0].replace(",", ".")) : null;
+  };
+  const a = num(current);
+  const b = num(previous);
+  if (a === null || b === null || a === b) return null;
+  return a > b ? "up" : "down";
 }

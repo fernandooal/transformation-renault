@@ -2,15 +2,16 @@ import { useEffect, useState } from "react";
 import * as F4Service from "../services/f4.service";
 import { PEOPLE } from "../services/mock/people";
 import { documentState } from "../models/f4";
-import type { F4Detail, F4HistoryEntry } from "../models/f4";
+import type { F4Comparison, F4Detail, F4HistoryEntry } from "../models/f4";
 
-export type DetailTab = "historico" | "versoes" | "checkpoints" | "documentos";
+export type DetailTab = "historico" | "versoes" | "documentos";
 
 /** Identidade do usuário na DEMO: a mesma que assina, comenta e cria checkpoint. */
 const CURRENT_USER = PEOPLE.leticia;
 
 export function useF4Detail(id: number) {
   const [f4, setF4] = useState<F4Detail | null>(null);
+  const [comparison, setComparison] = useState<F4Comparison | null>(null);
   const [tab, setTab] = useState<DetailTab>("historico");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,6 +20,7 @@ export function useF4Detail(id: number) {
   useEffect(() => {
     let alive = true;
     setLoading(true);
+    F4Service.comparison(id).then((c) => alive && setComparison(c));
     F4Service.detail(id)
       .then((d) => {
         if (!alive) return;
@@ -98,6 +100,7 @@ export function useF4Detail(id: number) {
 
   return {
     f4,
+    comparison,
     tab,
     setTab,
     loading,
@@ -106,7 +109,6 @@ export function useF4Detail(id: number) {
     currentUser: CURRENT_USER,
     dismissNotice: () => setNotice(null),
     comment: (text: string) => append("comment", text, "comentário"),
-    checkpoint: (text: string) => append("checkpoint", text, "Marco"),
     sign,
     /** Aprova, assina o termo se estiver na vez e leva para a aba de assinaturas. */
     approveAndSign: () => {
