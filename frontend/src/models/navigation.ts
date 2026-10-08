@@ -6,10 +6,13 @@ export interface NavItem {
   icon: IconName;
 }
 
-/** Sidebar do design: 4 itens. "Projetos" entra quando o domínio de projetos existir. */
+/**
+ * Sidebar do design: 4 itens. "Controle de acesso" saiu — a matriz de
+ * permissões vive em Projeto > Gerenciar Permissões.
+ */
 export const NAV_ITEMS: NavItem[] = [
   { to: "/dashboards", label: "Dashboards", icon: "grid" },
   { to: "/f4", label: "F4's", icon: "file" },
-  { to: "/acessos", label: "Controle de acesso", icon: "users" },
+  { to: "/projetos", label: "Projetos", icon: "users" },
   { to: "/fornecedores", label: "Fornecedores", icon: "supplier" },
 ];

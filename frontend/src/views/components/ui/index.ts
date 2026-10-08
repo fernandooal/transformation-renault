@@ -6,6 +6,7 @@ export type { TextFieldProps, FieldTone, FieldVariant } from "./TextField";
 export { default as PasswordField } from "./PasswordField";
 export { default as CodeInput } from "./CodeInput";
 export { default as Checkbox } from "./Checkbox";
+export { default as Toggle } from "./Toggle";
 export { default as Select } from "./Select";
 export type { SelectOption } from "./Select";
 export { default as SearchInput } from "./SearchInput";

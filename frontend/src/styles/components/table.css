@@ -66,8 +66,17 @@
   color: var(--color-text-brand);
 }
 .cell-primary__meta {
+  font-family: var(--font-mono);
   font-size: var(--text-sm);
   color: var(--color-text-muted);
+}
+
+/* part numbers, códigos e datas: o design usa monoespaçada nas tabelas */
+.cell-mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  white-space: nowrap;
 }
 .cell-person {
   display: inline-flex;
