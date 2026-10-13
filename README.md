@@ -65,7 +65,7 @@ frontend/
 └── src/
     ├── main.tsx           bootstrap (router + AuthProvider)
     ├── App.tsx            mapa de rotas (AuthLayout · AppLayout)
-    ├── assets/            logo RGdB e arte de fundo das telas de autenticação
+    ├── assets/            logos (UNNA no login, RGdB no app) e arte de fundo da autenticação
     ├── models/            domínio: status, roles, f4, dashboard, auth, navigation,
     │                      o schema do formulário F4 (f4Form) e as colunas da
     │                      exportação (f4Export)

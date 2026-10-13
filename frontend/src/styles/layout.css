@@ -4,7 +4,9 @@
   position: relative;
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 1fr auto;
+  /* minmax(0,…) deixa a marca encolher em vez de empurrar o card para fora
+     da tela entre 900px e 1150px, onde o layout ainda é de duas colunas. */
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--space-10);
   padding: var(--space-9) clamp(var(--space-6), 6vw, 120px);
@@ -43,7 +45,8 @@
   }
 }
 
-/* Logo RGdB — um PNG com alpha, tingido por mask para servir claro e escuro. */
+/* Logo — um PNG com alpha, tingido por mask para servir claro e escuro.
+   A proporção vem do próprio arquivo, via --brand-ratio (ver BrandLockup). */
 .brand {
   display: block;
   background-color: currentColor;
@@ -55,11 +58,13 @@
   mask-size: contain;
   -webkit-mask-position: left center;
   mask-position: left center;
-  aspect-ratio: 1140 / 460;
+  aspect-ratio: var(--brand-ratio, 1140 / 460);
 }
 
 .brand--lg {
-  width: min(46vw, 640px);
+  /* o desenho ocupa 794px dos 1920 do frame — 41,4% da largura */
+  width: min(42vw, 794px);
+  max-width: 100%;
   color: var(--color-text-on-dark);
 }
 
