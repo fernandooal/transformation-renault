@@ -7,7 +7,7 @@
  * API falar o vocabulário canônico, este arquivo sai e o adaptador vira
  * identidade.
  */
-import type { F4Checkpoint, F4Detail, F4HistoryEntry, F4Summary, Person } from "../../models/f4";
+import type { F4Checkpoint, F4Detail, F4Economics, F4HistoryEntry, F4Summary, Person } from "../../models/f4";
 import type { F4Status } from "../../models/status";
 import { PEOPLE } from "./people";
 import { documentsFor } from "./documents.mock";
@@ -41,6 +41,46 @@ function entry(
   return { id: ++entryId, author, at, kind, body, tag, tagTone };
 }
 
+/**
+ * Síntese econômica a partir dos três números que distinguem uma F4 da outra —
+ * impacto técnico de preço, ferramental e volume anual. O resto segue as
+ * proporções do formulário real: o costbreakdown reparte o impacto técnico, e
+ * PDS/embalagem são frações dele. Derivado, e não sorteado, porque a exportação
+ * precisa sair igual a cada execução.
+ */
+function economicsOf(
+  technicalPriceImpact: number,
+  toolingImpact: number,
+  annualVolume: number,
+  months = 24
+): F4Economics {
+  const t = technicalPriceImpact;
+  return {
+    currency: "EUR",
+    units: "Part",
+    technicalPriceImpact: t,
+    toolingImpact,
+    entryTicketImpact: Math.round(toolingImpact * 0.15),
+    massProdPdsImpact: Math.round(t * 0.08),
+    aftersalesPdsImpact: Math.round(t * 0.03),
+    packagingImpact: Math.round(t * 0.05),
+    annualVolume,
+    setTotal: Math.round(toolingImpact * 0.6),
+    costBreakdown: {
+      material: Math.round(t * 0.52),
+      directCost: Math.round(t * 0.18),
+      undirectCost: Math.round(t * 0.11),
+      generalFees: Math.round(t * 0.13),
+      packaging: Math.round(t * 0.06),
+    },
+    amortization: {
+      quantity: annualVolume * Math.round(months / 12),
+      months,
+      financialFeesPct: 4.5,
+    },
+  };
+}
+
 interface Seed {
   id: number;
   code: string;
@@ -57,19 +97,20 @@ interface Seed {
   responsible: Person | null;
   outcome: F4Summary["outcome"];
   updatedAt: string;
+  economics: F4Economics;
 }
 
 const SEEDS: Seed[] = [
-  { id: 1, code: "F4 2024 - 0847", version: "v3", part: "Disco de freio dianteiro", partNumber: "7701208466", supplier: PEOPLE.andrade, project: "U79 Oroch", status: "TECH_REVIEW", stagesDone: 2, returns: 3, technicalReturns: 2, commercialReturns: 1, responsible: PEOPLE.leticia, outcome: null, updatedAt: daysAgo(2) },
-  { id: 2, code: "F4 2024 - 0851", version: "v1", part: "Suporte do coletor de admissão", partNumber: "8200934112", supplier: PEOPLE.andrade, project: "R1312 Boreal", status: "IN_REWORK", stagesDone: 2, returns: 0, technicalReturns: 0, commercialReturns: 0, responsible: PEOPLE.leticia, outcome: null, updatedAt: hoursAgo(5) },
-  { id: 3, code: "F4 2024 - 0839", version: "v2", part: "Chicote elétrico da porta", partNumber: "7711636988", supplier: PEOPLE.andrade, project: "X62 Master", status: "COMMERCIAL_REVIEW", stagesDone: 3, returns: 2, technicalReturns: 1, commercialReturns: 1, responsible: PEOPLE.rafael, outcome: null, updatedAt: daysAgo(1) },
-  { id: 4, code: "F4 2024 - 0822", version: "v1", part: "Coxim do motor", partNumber: "1126800422", supplier: PEOPLE.plasttech, project: "HJF Kardian", status: "IN_REWORK", stagesDone: 2, returns: 0, technicalReturns: 0, commercialReturns: 0, responsible: PEOPLE.leticia, outcome: null, updatedAt: hoursAgo(3) },
-  { id: 5, code: "F4 2024 - 0810", version: "v4", part: "Alojamento do farol LED", partNumber: "2609011552", supplier: PEOPLE.plasttech, project: "HJD Duster", status: "APPROVED", stagesDone: 4, returns: 1, technicalReturns: 1, commercialReturns: 0, responsible: null, outcome: "concluida", updatedAt: daysAgo(4) },
-  { id: 6, code: "F4 2024 - 0798", version: "v2", part: "Cabo do freio de mão", partNumber: "3650402192", supplier: PEOPLE.eletrosis, project: "BBB Kwid", status: "CANCELLED", stagesDone: 3, returns: 0, technicalReturns: 0, commercialReturns: 0, responsible: null, outcome: "encerrada", updatedAt: daysAgo(6) },
-  { id: 7, code: "F4 2024 - 0866", version: "v1", part: "Travessa do painel frontal", partNumber: "8201455907", supplier: PEOPLE.eletrosis, project: "U79 Oroch", status: "FINAL_REVIEW", stagesDone: 3, returns: 1, technicalReturns: 0, commercialReturns: 1, responsible: PEOPLE.ana, outcome: null, updatedAt: hoursAgo(9) },
-  { id: 8, code: "F4 2024 - 0871", version: "v1", part: "Bucha da bandeja suspensão", partNumber: "5461122871", supplier: PEOPLE.andrade, project: "X62 Master", status: "DRAFT", stagesDone: 0, returns: 0, technicalReturns: 0, commercialReturns: 0, responsible: null, outcome: null, updatedAt: hoursAgo(1) },
-  { id: 9, code: "F4 2024 - 0803", version: "v5", part: "Módulo de conforto BCM", partNumber: "2843901145", supplier: PEOPLE.eletrosis, project: "HJF Kardian", status: "REJECTED", stagesDone: 2, returns: 4, technicalReturns: 3, commercialReturns: 1, responsible: PEOPLE.carla, outcome: null, updatedAt: daysAgo(3) },
-  { id: 10, code: "F4 2024 - 0858", version: "v2", part: "Defletor de ar do radiador", partNumber: "2148806633", supplier: PEOPLE.plasttech, project: "R1312 Boreal", status: "TECH_REVIEW", stagesDone: 2, returns: 1, technicalReturns: 1, commercialReturns: 0, responsible: PEOPLE.bruno, outcome: null, updatedAt: hoursAgo(16) },
+  { id: 1, code: "F4 2024 - 0847", version: "v3", part: "Disco de freio dianteiro", partNumber: "7701208466", supplier: PEOPLE.andrade, project: "U79 Oroch", status: "TECH_REVIEW", stagesDone: 2, returns: 3, technicalReturns: 2, commercialReturns: 1, responsible: PEOPLE.leticia, outcome: null, updatedAt: daysAgo(2), economics: economicsOf(86400, 42000, 118000) },
+  { id: 2, code: "F4 2024 - 0851", version: "v1", part: "Suporte do coletor de admissão", partNumber: "8200934112", supplier: PEOPLE.andrade, project: "R1312 Boreal", status: "IN_REWORK", stagesDone: 2, returns: 0, technicalReturns: 0, commercialReturns: 0, responsible: PEOPLE.leticia, outcome: null, updatedAt: hoursAgo(5), economics: economicsOf(23900, 15500, 64000, 12) },
+  { id: 3, code: "F4 2024 - 0839", version: "v2", part: "Chicote elétrico da porta", partNumber: "7711636988", supplier: PEOPLE.andrade, project: "X62 Master", status: "COMMERCIAL_REVIEW", stagesDone: 3, returns: 2, technicalReturns: 1, commercialReturns: 1, responsible: PEOPLE.rafael, outcome: null, updatedAt: daysAgo(1), economics: economicsOf(147200, 61000, 91000, 36) },
+  { id: 4, code: "F4 2024 - 0822", version: "v1", part: "Coxim do motor", partNumber: "1126800422", supplier: PEOPLE.plasttech, project: "HJF Kardian", status: "IN_REWORK", stagesDone: 2, returns: 0, technicalReturns: 0, commercialReturns: 0, responsible: PEOPLE.leticia, outcome: null, updatedAt: hoursAgo(3), economics: economicsOf(38600, 27400, 142000) },
+  { id: 5, code: "F4 2024 - 0810", version: "v4", part: "Alojamento do farol LED", partNumber: "2609011552", supplier: PEOPLE.plasttech, project: "HJD Duster", status: "APPROVED", stagesDone: 4, returns: 1, technicalReturns: 1, commercialReturns: 0, responsible: null, outcome: "concluida", updatedAt: daysAgo(4), economics: economicsOf(112500, 54800, 76000, 36) },
+  { id: 6, code: "F4 2024 - 0798", version: "v2", part: "Cabo do freio de mão", partNumber: "3650402192", supplier: PEOPLE.eletrosis, project: "BBB Kwid", status: "CANCELLED", stagesDone: 3, returns: 0, technicalReturns: 0, commercialReturns: 0, responsible: null, outcome: "encerrada", updatedAt: daysAgo(6), economics: economicsOf(19800, 9200, 205000, 12) },
+  { id: 7, code: "F4 2024 - 0866", version: "v1", part: "Travessa do painel frontal", partNumber: "8201455907", supplier: PEOPLE.eletrosis, project: "U79 Oroch", status: "FINAL_REVIEW", stagesDone: 3, returns: 1, technicalReturns: 0, commercialReturns: 1, responsible: PEOPLE.ana, outcome: null, updatedAt: hoursAgo(9), economics: economicsOf(64300, 33100, 88000) },
+  { id: 8, code: "F4 2024 - 0871", version: "v1", part: "Bucha da bandeja suspensão", partNumber: "5461122871", supplier: PEOPLE.andrade, project: "X62 Master", status: "DRAFT", stagesDone: 0, returns: 0, technicalReturns: 0, commercialReturns: 0, responsible: null, outcome: null, updatedAt: hoursAgo(1), economics: economicsOf(12400, 6800, 47000, 6) },
+  { id: 9, code: "F4 2024 - 0803", version: "v5", part: "Módulo de conforto BCM", partNumber: "2843901145", supplier: PEOPLE.eletrosis, project: "HJF Kardian", status: "REJECTED", stagesDone: 2, returns: 4, technicalReturns: 3, commercialReturns: 1, responsible: PEOPLE.carla, outcome: null, updatedAt: daysAgo(3), economics: economicsOf(198700, 88500, 59000, 48) },
+  { id: 10, code: "F4 2024 - 0858", version: "v2", part: "Defletor de ar do radiador", partNumber: "2148806633", supplier: PEOPLE.plasttech, project: "R1312 Boreal", status: "TECH_REVIEW", stagesDone: 2, returns: 1, technicalReturns: 1, commercialReturns: 0, responsible: PEOPLE.bruno, outcome: null, updatedAt: hoursAgo(16), economics: economicsOf(41900, 21600, 133000) },
 ];
 
 function historyFor(seed: Seed): F4HistoryEntry[] {

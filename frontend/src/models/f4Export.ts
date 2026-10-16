@@ -1,5 +1,6 @@
 /** O que vai no arquivo exportado. Ponto único de verdade das colunas. */
 import type { SheetColumn } from "../utils/spreadsheet";
+import { totalImpact, unitImpact } from "./f4";
 import type { F4Summary } from "./f4";
 import { STATUS_META } from "./status";
 import { roleMeta } from "./roles";
@@ -23,7 +24,8 @@ const OUTCOME_LABEL = { concluida: "Concluída", encerrada: "Encerrada" } as con
 
 const date = (iso: string): string => new Date(iso).toLocaleDateString("pt-BR");
 
-export const EXPORT_COLUMNS: Array<SheetColumn<F4Summary>> = [
+/** Identificação e andamento — as colunas de sempre. */
+const TRACKING_COLUMNS: Array<SheetColumn<F4Summary>> = [
   { header: "Código", value: (f) => f.code },
   { header: "Versão", value: (f) => f.version },
   { header: "Peça", value: (f) => f.part },
@@ -36,6 +38,44 @@ export const EXPORT_COLUMNS: Array<SheetColumn<F4Summary>> = [
   { header: "Cargo", value: (f) => (f.responsible ? roleMeta(f.responsible.role).short : "") },
   { header: "Encerramento", value: (f) => (f.outcome ? OUTCOME_LABEL[f.outcome] : "") },
   { header: "Atualizado em", value: (f) => date(f.updatedAt) },
+];
+
+/** Impacto unitário é a única coluna que não é inteira; 3 casas, como no formulário. */
+const round3 = (v: number): number => Math.round(v * 1000) / 1000;
+
+/**
+ * Síntese econômica, costbreakdown e amortização — a parte que faltava para a
+ * planilha servir de análise, e não só de acompanhamento.
+ *
+ * Os valores saem como número, não como texto formatado por `money()`: só assim
+ * o Excel soma e filtra. A moeda vai em coluna própria, na frente do bloco.
+ */
+const ECONOMIC_COLUMNS: Array<SheetColumn<F4Summary>> = [
+  { header: "Moeda", value: (f) => f.economics.currency },
+  { header: "Unidade", value: (f) => f.economics.units },
+  { header: "Impacto Técnico de Preço", value: (f) => f.economics.technicalPriceImpact },
+  { header: "Impacto de Ferramental", value: (f) => f.economics.toolingImpact },
+  { header: "Entry Ticket", value: (f) => f.economics.entryTicketImpact },
+  { header: "PDS Série", value: (f) => f.economics.massProdPdsImpact },
+  { header: "PDS Pós-venda", value: (f) => f.economics.aftersalesPdsImpact },
+  { header: "Impacto de Embalagem", value: (f) => f.economics.packagingImpact },
+  { header: "Impacto Total", value: (f) => totalImpact(f.economics) },
+  { header: "Volume Anual", value: (f) => f.economics.annualVolume },
+  { header: "Impacto Unitário", value: (f) => round3(unitImpact(f.economics)) },
+  { header: "SET Total", value: (f) => f.economics.setTotal },
+  { header: "Custo Material", value: (f) => f.economics.costBreakdown.material },
+  { header: "Custo Direto", value: (f) => f.economics.costBreakdown.directCost },
+  { header: "Custo Indireto", value: (f) => f.economics.costBreakdown.undirectCost },
+  { header: "Despesas Gerais + Margem", value: (f) => f.economics.costBreakdown.generalFees },
+  { header: "Custo de Embalagem", value: (f) => f.economics.costBreakdown.packaging },
+  { header: "Qtd. Amortização", value: (f) => f.economics.amortization.quantity },
+  { header: "Amortização (meses)", value: (f) => f.economics.amortization.months },
+  { header: "Taxa Financeira (%)", value: (f) => f.economics.amortization.financialFeesPct },
+];
+
+export const EXPORT_COLUMNS: Array<SheetColumn<F4Summary>> = [
+  ...TRACKING_COLUMNS,
+  ...ECONOMIC_COLUMNS,
 ];
 
 /** `updatedAt` é a única data da F4Summary — é por ela que o período filtra. */
