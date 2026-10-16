@@ -11,7 +11,11 @@ export interface SheetColumn<T> {
 const CSV_SEP = ";";
 
 function csvCell(value: string | number): string {
-  const text = String(value ?? "");
+  // Vírgula decimal: sem ela o Excel pt-BR lê "4.5" como texto, não como número.
+  const text =
+    typeof value === "number" && Number.isFinite(value)
+      ? String(value).replace(".", ",")
+      : String(value ?? "");
   return /[";\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
 }
 

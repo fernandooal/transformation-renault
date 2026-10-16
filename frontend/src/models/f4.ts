@@ -57,6 +57,58 @@ export interface F4Checkpoint {
   by: string | null;
 }
 
+/**
+ * Síntese econômica da F4 — o vocabulário da "Economical Synthesis" e do
+ * "Part Price Gap Costbreakdown" do formulário real (ver `models/f4Form.ts`).
+ * Os seis impactos somam o impacto total; o costbreakdown abre o impacto
+ * técnico de preço.
+ */
+export interface F4Economics {
+  /** ISO 4217 — "EUR" | "BRL" | "USD". */
+  currency: string;
+  /** Unidade do preço: "Part", "Set", "Kg". */
+  units: string;
+  technicalPriceImpact: number;
+  toolingImpact: number;
+  entryTicketImpact: number;
+  massProdPdsImpact: number;
+  aftersalesPdsImpact: number;
+  packagingImpact: number;
+  /** Volume anual de peças — divisor do impacto unitário. */
+  annualVolume: number;
+  /** Total do SET Gap Costbreakdown (Σ quantidade × custo unitário). */
+  setTotal: number;
+  costBreakdown: {
+    material: number;
+    directCost: number;
+    undirectCost: number;
+    generalFees: number;
+    packaging: number;
+  };
+  amortization: {
+    quantity: number;
+    months: number;
+    financialFeesPct: number;
+  };
+}
+
+/** A mesma soma que o formulário faz sobre `IMPACT_FIELDS`. */
+export function totalImpact(e: F4Economics): number {
+  return (
+    e.technicalPriceImpact +
+    e.toolingImpact +
+    e.entryTicketImpact +
+    e.massProdPdsImpact +
+    e.aftersalesPdsImpact +
+    e.packagingImpact
+  );
+}
+
+/** Impacto por peça — `totalImpact / annualVolume`, como em `useF4Form`. */
+export function unitImpact(e: F4Economics): number {
+  return e.annualVolume ? totalImpact(e) / e.annualVolume : 0;
+}
+
 /** Linha da tabela "Todas as F4's". */
 export interface F4Summary {
   id: number;
@@ -75,6 +127,7 @@ export interface F4Summary {
   /** Encerramento, eixo separado do status (como no design). */
   outcome: "concluida" | "encerrada" | null;
   updatedAt: string;
+  economics: F4Economics;
 }
 
 export interface F4Detail extends F4Summary {
