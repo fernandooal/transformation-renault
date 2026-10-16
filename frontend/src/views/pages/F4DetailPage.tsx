@@ -54,18 +54,24 @@ export default function F4DetailPage() {
         title={f4.part}
         back={{ to: "/f4", label: "Voltar para F4s" }}
         actions={
-          <>
-            <Button
-              variant="outline"
-              icon={<Icon name="returnArrow" size={18} />}
-              onClick={s.returnToSupplier}
-            >
-              Devolver para a Revisão
-            </Button>
-            <Button icon={<Icon name="pencil" size={18} />} onClick={s.approveAndSign}>
-              Aprovar e Assinar
-            </Button>
-          </>
+          // Aprovada é estado terminal: não há mais o que devolver nem assinar.
+          // O que resta é emitir o documento — ainda sem geração por trás.
+          f4.status === "APPROVED" ? (
+            <Button icon={<Icon name="docsStack" size={18} />}>Gerar F4</Button>
+          ) : (
+            <>
+              <Button
+                variant="outline"
+                icon={<Icon name="returnArrow" size={18} />}
+                onClick={s.returnToSupplier}
+              >
+                Devolver para a Revisão
+              </Button>
+              <Button icon={<Icon name="pencil" size={18} />} onClick={s.approveAndSign}>
+                Aprovar e Assinar
+              </Button>
+            </>
+          )
         }
       />
 

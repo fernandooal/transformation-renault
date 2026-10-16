@@ -113,6 +113,9 @@ export function useF4Detail(id: number) {
       const termo = f4?.documents.find((d) => d.kind === "TERMO");
       if (termo) signDocument(termo.id);
       append("approval", "Aprovada e assinada digitalmente.", "assinatura (mock)");
+      // Leva a F4 ao estado terminal: é o que troca as ações do cabeçalho por
+      // "Gerar F4". Local como o resto — o backend não tem endpoint de aprovação.
+      setF4((prev) => (prev ? { ...prev, status: "APPROVED" } : prev));
       setNotice("Aprovação registrada. A assinatura ICP-Brasil ainda é simulada nesta DEMO.");
       setTab("documentos");
     },
