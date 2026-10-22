@@ -83,7 +83,7 @@
   color: var(--color-text);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 8px; /* ver nota de interpolação no topo do arquivo */
+  border-radius: 0; /* ver nota de interpolação no topo do arquivo */
   transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
@@ -161,7 +161,7 @@
   place-content: center;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 4px;
+  border-radius: 0;
   cursor: pointer;
   transition: border-color 0.12s ease;
 }
@@ -288,7 +288,7 @@
 
 .f4-readout__label {
   padding: var(--space-2) var(--space-3);
-  border-radius: 8px 8px 0 0;
+  border-radius: 0;
   background: var(--c-lavender-200);
   color: var(--color-text-brand);
   font-family: var(--font-display);
@@ -299,7 +299,7 @@
 
 .f4-readout__value {
   padding: var(--space-3) var(--space-4);
-  border-radius: 0 0 8px 8px;
+  border-radius: 0;
   background: var(--c-gray-25);
   color: var(--color-text);
   font-family: var(--font-body);
@@ -364,7 +364,7 @@
   color: var(--color-text);
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: 0;
   transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
