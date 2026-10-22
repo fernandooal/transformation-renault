@@ -46,3 +46,12 @@ export function isOverdue(deadline: string, now = new Date()): boolean {
   if (!deadline) return false;
   return new Date(deadline).getTime() < now.getTime();
 }
+
+/** "22/09 · 08:17" — formato que o design usa na coluna "Atualizado". */
+export function shortDateTime(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const date = d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+  const time = d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  return `${date} · ${time}`;
+}

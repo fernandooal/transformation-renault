@@ -58,7 +58,7 @@
 .chart-legend__swatch {
   width: 12px;
   height: 12px;
-  border-radius: 3px;
+  border-radius: 0;
   flex: none;
 }
 .chart-legend--emphasis .chart-legend__item {
@@ -73,7 +73,7 @@
 .chart-legend--emphasis .chart-legend__swatch {
   width: 18px;
   height: 18px;
-  border-radius: 4px;
+  border-radius: 0;
 }
 
 /* Tooltip */

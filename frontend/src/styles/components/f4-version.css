@@ -1,0 +1,79 @@
+/* Matriz campo × versão da aba "Comparar Versões". */
+
+.vmatrix__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-5);
+}
+.vmatrix__title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-brand);
+}
+.vmatrix__meta {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.vmatrix__table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 2px;
+}
+
+/* cabeçalho de versão: inativa em cinza, corrente em roxo sólido */
+.vmatrix__version {
+  min-width: 120px;
+  padding: var(--space-3) var(--space-4);
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+  background: var(--c-gray-35);
+  border-radius: var(--radius-sm);
+}
+.vmatrix__version.is-current {
+  background: var(--color-primary);
+  color: var(--color-text-on-primary);
+  font-weight: var(--weight-bold);
+}
+
+/* coluna de rótulo: lavanda, alinhada à esquerda */
+.vmatrix__label {
+  width: 260px;
+  padding: var(--space-4) var(--space-5);
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-primary);
+  background: var(--c-lavender-200);
+  border-radius: var(--radius-sm);
+}
+
+.vmatrix__value {
+  padding: var(--space-4);
+  text-align: center;
+  background: var(--c-gray-25);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.vmatrix__trend {
+  display: inline-flex;
+  align-items: center;
+  margin-left: var(--space-2);
+  vertical-align: middle;
+}
+.vmatrix__trend.is-up {
+  color: var(--c-green-700);
+}
+.vmatrix__trend.is-down {
+  color: var(--c-red-700);
+}

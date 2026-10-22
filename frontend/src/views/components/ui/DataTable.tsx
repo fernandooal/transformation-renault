@@ -10,6 +10,14 @@ export interface Column<T> {
   render: (row: T) => ReactNode;
 }
 
+export interface TableSort {
+  key: string | null;
+  dir: "asc" | "desc";
+  onSort: (key: string) => void;
+  /** Move a coluna uma posição. Ausente, a tabela não é reordenável. */
+  onMove?: (key: string, delta: -1 | 1) => void;
+}
+
 export interface TableSelection<T> {
   selected: Set<string | number>;
   onToggle: (row: T) => void;
@@ -29,6 +37,8 @@ export interface DataTableProps<T> {
   onRowClick?: (row: T) => void;
   /** Coluna de checkbox à esquerda. Ausente, a tabela é a de sempre. */
   selection?: TableSelection<T>;
+  /** Cabeçalhos ordenáveis e, opcionalmente, movíveis. */
+  sort?: TableSort;
   empty?: ReactNode;
   caption?: string;
 }
@@ -39,6 +49,7 @@ export default function DataTable<T>({
   getRowKey,
   onRowClick,
   selection,
+  sort,
   empty,
   caption,
 }: DataTableProps<T>) {
@@ -66,16 +77,56 @@ export default function DataTable<T>({
                 />
               </th>
             )}
-            {columns.map((col) => (
-              <th
-                key={col.key}
-                scope="col"
-                style={col.width ? { width: col.width } : undefined}
-                className={col.align ? `align-${col.align}` : undefined}
-              >
-                {col.header}
-              </th>
-            ))}
+            {columns.map((col, i) => {
+              const active = sort?.key === col.key;
+              return (
+                <th
+                  key={col.key}
+                  scope="col"
+                  style={col.width ? { width: col.width } : undefined}
+                  className={cx(col.align && `align-${col.align}`, sort && "is-sortable")}
+                  aria-sort={active ? (sort!.dir === "asc" ? "ascending" : "descending") : undefined}
+                >
+                  {sort ? (
+                    <span className="th-controls">
+                      <button
+                        type="button"
+                        className={cx("th-sort", active && "is-active")}
+                        onClick={() => sort.onSort(col.key)}
+                      >
+                        {col.header}
+                        <span
+                          className={cx("th-caret", active && sort.dir === "asc" && "is-up")}
+                          aria-hidden="true"
+                        />
+                      </button>
+                      {sort.onMove && (
+                        <span className="th-move">
+                          <button
+                            type="button"
+                            aria-label={`Mover coluna para a esquerda`}
+                            disabled={i === 0}
+                            onClick={() => sort.onMove!(col.key, -1)}
+                          >
+                            ‹
+                          </button>
+                          <button
+                            type="button"
+                            aria-label={`Mover coluna para a direita`}
+                            disabled={i === columns.length - 1}
+                            onClick={() => sort.onMove!(col.key, 1)}
+                          >
+                            ›
+                          </button>
+                        </span>
+                      )}
+                    </span>
+                  ) : (
+                    col.header
+                  )}
+                </th>
+              );
+            })}
           </tr>
         </thead>
         <tbody>

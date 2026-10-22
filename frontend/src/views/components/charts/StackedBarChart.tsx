@@ -16,7 +16,7 @@ export interface StackedBarChartProps {
   showLegend?: boolean;
 }
 
-const RADIUS = 4;
+const RADIUS = 0;
 /** Respiro na cor da superfície entre segmentos empilhados. */
 const GAP = 2;
 const SLOT = 100;

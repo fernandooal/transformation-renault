@@ -4,10 +4,9 @@ import { Icon } from "../icons";
 
 export interface CommentComposerProps {
   onComment: (text: string) => void;
-  onCheckpoint: (text: string) => void;
 }
 
-export default function CommentComposer({ onComment, onCheckpoint }: CommentComposerProps) {
+export default function CommentComposer({ onComment }: CommentComposerProps) {
   const [text, setText] = useState("");
   const empty = text.trim().length === 0;
 
@@ -29,25 +28,15 @@ export default function CommentComposer({ onComment, onCheckpoint }: CommentComp
         placeholder="Escreva um comentário ou uma nota técnica para esta etapa..."
       />
       <div className="composer__actions">
-        <Button
-          variant="ghost"
-          size="sm"
-          icon={<Icon name="flag" size={16} />}
-          disabled={empty}
-          onClick={() => send(onCheckpoint)}
-        >
-          Criar checkpoint
-        </Button>
         <Button variant="ghost" size="sm" icon={<Icon name="attach" size={16} />} disabled>
           Anexar
         </Button>
         <Button
-          size="sm"
           className="composer__send"
           disabled={empty}
           onClick={() => send(onComment)}
         >
-          Comentar
+          Enviar
         </Button>
       </div>
     </div>

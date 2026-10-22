@@ -19,66 +19,6 @@
   letter-spacing: 0.02em;
 }
 
-/* --- faixa do fluxo --- */
-.flow {
-  display: flex;
-  align-items: flex-start;
-  padding: var(--space-8) var(--space-7);
-  background: var(--c-white-warm);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
-}
-
-.flow__stage {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-2);
-  flex: none;
-  width: 150px;
-  text-align: center;
-}
-
-.flow__icon {
-  display: grid;
-  place-items: center;
-  width: 86px;
-  height: 86px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  color: var(--color-text-on-primary);
-  margin-bottom: var(--space-2);
-}
-.flow__stage--pending .flow__icon {
-  background: var(--c-purple-100);
-  color: var(--color-primary);
-}
-
-.flow__label {
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-weight: var(--weight-bold);
-  color: var(--color-text-brand);
-}
-.flow__person {
-  font-size: var(--text-md);
-  color: var(--color-text-muted);
-}
-
-/* trilho entre as etapas, alinhado ao centro do ícone */
-.flow__link {
-  flex: 1;
-  height: 3px;
-  border-radius: var(--radius-pill);
-  background: var(--c-purple-100);
-  margin-top: 43px;
-  min-width: 24px;
-}
-.flow__link.is-done {
-  background: var(--color-primary);
-}
-
 /* --- rail lateral --- */
 .party {
   display: flex;
@@ -379,4 +319,154 @@
   font-size: var(--text-sm);
   color: var(--color-text-muted);
   white-space: nowrap;
+}
+
+
+/* ===== Rail vertical do fluxo (substitui a faixa horizontal) ===== */
+
+.flow-rail {
+  background: var(--c-lavender-100);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-self: start;
+}
+
+.flow-rail__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.flow-rail__title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-brand);
+}
+.flow-rail__returns {
+  align-self: flex-start;
+}
+
+.flow-rail__stages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.flow-rail__stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.flow-rail__icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex: none;
+  border-radius: var(--radius-md);
+  color: var(--color-text-on-primary);
+}
+.flow-rail__icon--supplier {
+  background: var(--stage-supplier);
+}
+.flow-rail__icon--technical {
+  background: var(--stage-technical);
+}
+.flow-rail__icon--commercial {
+  background: var(--stage-commercial);
+}
+.flow-rail__icon--final {
+  background: var(--stage-final);
+}
+.flow-rail__stage.is-pending .flow-rail__icon {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.flow-rail__labels {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.flow-rail__stage-name {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-brand);
+}
+.flow-rail__person {
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+/* badge ↵N de devoluções na etapa, à esquerda do ícone */
+.flow-rail__volta {
+  position: absolute;
+  left: -22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  color: var(--c-orange-600);
+}
+
+/* conector: duas linhas (laranja + roxa) no trecho percorrido */
+.flow-rail__link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 64px;
+  padding-left: 15px;
+}
+.flow-rail__rails {
+  position: relative;
+  width: 16px;
+  align-self: stretch;
+  flex: none;
+}
+.flow-rail__rails::before,
+.flow-rail__rails::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-soft);
+}
+.flow-rail__rails::before {
+  left: 0;
+}
+.flow-rail__rails::after {
+  left: 9px;
+}
+.flow-rail__link.is-done .flow-rail__rails::before {
+  background: var(--stage-supplier);
+}
+.flow-rail__link.is-done .flow-rail__rails::after {
+  background: var(--color-primary);
+}
+.flow-rail__milestone {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* a aba passa a ter duas colunas: timeline + rail */
+.tab-split {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--space-6);
+  align-items: start;
+}
+@media (max-width: 1280px) {
+  .tab-split {
+    grid-template-columns: 1fr;
+  }
 }

@@ -11,7 +11,13 @@ export default function LoginPage() {
       <form onSubmit={submit} className="u-stack" style={{ gap: "var(--space-5)" }}>
         <TextField
           label="E-mail"
-          type="email"
+          /* type="text" de propósito: o backend ainda autentica por username, e
+             a credencial da DEMO é `demo`. Com type="email" o navegador bloqueia
+             o submit antes de o onSubmit rodar. O formato de e-mail é validado
+             em useLogin, mas só quando o valor contém "@". Voltar para
+             type="email" quando o login por e-mail for real no backend. */
+          type="text"
+          inputMode="email"
           value={email}
           onChange={setEmail}
           tone="onDark"
