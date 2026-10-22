@@ -4,7 +4,9 @@
   position: relative;
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 1fr auto;
+  /* minmax(0,…) deixa a marca encolher em vez de empurrar o card para fora
+     da tela entre 900px e 1150px, onde o layout ainda é de duas colunas. */
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--space-10);
   padding: var(--space-9) clamp(var(--space-6), 6vw, 120px);
@@ -43,7 +45,8 @@
   }
 }
 
-/* Logo RGdB — um PNG com alpha, tingido por mask para servir claro e escuro. */
+/* Logo — um PNG com alpha, tingido por mask para servir claro e escuro.
+   A proporção vem do próprio arquivo, via --brand-ratio (ver BrandLockup). */
 .brand {
   display: block;
   background-color: currentColor;
@@ -55,11 +58,13 @@
   mask-size: contain;
   -webkit-mask-position: left center;
   mask-position: left center;
-  aspect-ratio: 1140 / 460;
+  aspect-ratio: var(--brand-ratio, 1140 / 460);
 }
 
 .brand--lg {
-  width: min(46vw, 640px);
+  /* o desenho ocupa 794px dos 1920 do frame — 41,4% da largura */
+  width: min(42vw, 794px);
+  max-width: 100%;
   color: var(--color-text-on-dark);
 }
 
@@ -105,10 +110,61 @@
 /* ===== Shell do app ============================================= */
 
 .app-layout {
+  position: relative;
   display: grid;
   grid-template-columns: var(--sidebar-w) 1fr;
   min-height: 100vh;
   background: var(--color-bg-app);
+}
+
+/* Sidebar recolhida.
+   Precisa ser UMA coluna, não `0 1fr`: com a sidebar em display:none, o
+   skip-link absoluto e o botão fixed, o <main> vira o único item em fluxo e
+   seria colocado na primeira faixa — a de largura zero. */
+.app-layout--collapsed {
+  grid-template-columns: 1fr;
+}
+.app-layout--collapsed .sidebar {
+  display: none;
+}
+
+/* Com a sidebar fora, o conteúdo pode respirar — é o que deixa o grid de
+   fornecedores chegar nas 4 colunas do design. */
+.app-layout--collapsed .app-layout__inner {
+  max-width: 1720px;
+}
+
+/* Botão de recolher, colado na borda da sidebar. */
+.sidebar-toggle {
+  position: fixed;
+  top: var(--space-7);
+  left: calc(var(--sidebar-w) - 20px);
+  z-index: calc(var(--z-sidebar) + 1);
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-text-on-primary);
+  box-shadow: var(--shadow-card);
+  transform: rotate(90deg);
+  transition: left 0.18s ease;
+}
+.sidebar-toggle:hover {
+  background: var(--color-primary-strong);
+}
+.app-layout--collapsed .sidebar-toggle {
+  left: 0;
+  transform: rotate(-90deg);
+}
+
+/* Abaixo de 1100px o botão passava por cima do título da página. */
+@media (max-width: 1100px) {
+  .sidebar-toggle {
+    top: auto;
+    bottom: var(--space-7);
+  }
 }
 
 .app-layout__main {
@@ -157,7 +213,7 @@
   gap: var(--space-3);
   height: 52px;
   padding: 0 var(--space-4);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-nav);
   color: var(--color-text-brand);
   font-family: var(--font-display);
   font-size: var(--text-md);

@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import PageHeader from "../components/PageHeader";
 import AttentionList from "../components/AttentionList";
-import { Card, KpiCard, SectionTitle, Skeleton, buttonClass } from "../components/ui";
+import DashboardFilters from "../components/DashboardFilters";
+import { Button, Card, EmptyState, KpiCard, SectionTitle, Skeleton, buttonClass } from "../components/ui";
 import { PieChart, StackedBarChart } from "../components/charts";
 import { Icon } from "../components/icons";
 import { useDashboard } from "../../controllers/useDashboard";
@@ -39,14 +39,18 @@ function KpiRow({ items, loading }: { items: Kpi[]; loading: boolean }) {
 }
 
 export default function DashboardsPage() {
-  const { greeting, firstName, data, loading, error } = useDashboard();
-  const [query, setQuery] = useState("");
+  const { greeting, firstName, data, loading, error, filter, setField, clear, filtered } =
+    useDashboard();
 
   return (
     <>
       <PageHeader
         title={`${greeting}, ${firstName}`}
-        search={{ value: query, onChange: setQuery }}
+        search={{
+          value: filter.query,
+          onChange: (v) => setField("query", v),
+          placeholder: "busque por peça, código ou part number...",
+        }}
         actions={
           <Link to="/f4/nova" className={buttonClass("primary")}>
             <Icon name="plus" size={18} /> Nova F4
@@ -54,7 +58,32 @@ export default function DashboardsPage() {
         }
       />
 
+      {data && (
+        <DashboardFilters
+          filter={filter}
+          options={data.options}
+          onChange={setField}
+          onClear={clear}
+          matched={data.matched}
+          active={filtered}
+        />
+      )}
+
       {error && <p className="error">{error}</p>}
+
+      {data && data.matched === 0 && (
+        <Card padding="none">
+          <EmptyState
+            title="Nenhuma F4 nesse recorte"
+            description="Afrouxe o filtro de carro, de fornecedor ou a busca."
+            action={
+              <Button variant="ghost" onClick={clear}>
+                Limpar filtros
+              </Button>
+            }
+          />
+        </Card>
+      )}
 
       <KpiRow items={data?.kpis ?? []} loading={loading} />
 

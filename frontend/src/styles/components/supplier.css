@@ -1,0 +1,206 @@
+/* ============================================================================
+   Fornecedores — grid de cards e tela de relatório.
+   Fonte: TD2/fornecedores.png, TD2/fornecedores-1.png, TD2/NOME DO FORNECEDOR*.png
+   ========================================================================== */
+
+/* --- Grid ------------------------------------------------------------------
+   3 colunas na largura do conteúdo com a sidebar aberta; se o container
+   crescer (sidebar recolhida), o auto-fill acomoda uma quarta sem regra nova. */
+.supplier-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
+  gap: var(--space-6);
+  align-items: start;
+}
+
+/* --- Card do fornecedor --- */
+.supplier-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  color: inherit;
+  text-decoration: none;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+.supplier-card:hover {
+  text-decoration: none;
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+.supplier-card:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+.supplier-card--loading {
+  gap: var(--space-5);
+  cursor: default;
+}
+
+.supplier-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+.supplier-card__ident {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.supplier-card__name {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-brand);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.supplier-card__place {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* --- Avatar quadrado de iniciais --- */
+.supplier-avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.02em;
+  color: var(--color-text-on-primary);
+}
+.supplier-avatar--purple {
+  background: var(--color-primary);
+}
+.supplier-avatar--orange {
+  background: var(--c-orange-500);
+}
+.supplier-avatar--green {
+  background: var(--c-green-600);
+}
+
+/* --- Círculos de métrica ---------------------------------------------------
+   Gráfico: a cor classifica (totais / aprovadas / voltas), mas valor e rótulo
+   estão em texto dentro do próprio círculo, então nada depende só da cor. */
+.supplier-metrics {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: var(--space-2);
+  margin: var(--space-1) 0 0;
+  padding: 0;
+}
+.supplier-dial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  color: var(--color-text-on-primary);
+  text-align: center;
+}
+.supplier-dial--purple {
+  background: var(--color-primary);
+}
+.supplier-dial--green {
+  background: var(--c-green-700);
+}
+.supplier-dial--orange {
+  background: var(--c-orange-500);
+}
+.supplier-dial__value {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  line-height: 1.1;
+}
+.supplier-dial__label {
+  font-size: 9px;
+  line-height: 1.1;
+  font-weight: var(--weight-regular);
+  opacity: 0.95;
+}
+
+/* --- Rótulos da barra --- */
+.supplier-card__legend {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+/* --- Barra empilhada "Distribuição de resultado" --- */
+.outcome-bar {
+  display: flex;
+  width: 100%;
+  height: 8px;
+  margin-top: calc(var(--space-2) * -1);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  background: var(--color-surface-muted);
+}
+.outcome-bar__seg {
+  flex-basis: 0;
+  min-width: 2px;
+}
+.outcome-bar__seg--aprovadas {
+  background: var(--c-green-600);
+}
+.outcome-bar__seg--reprovadas {
+  background: var(--c-red-600);
+}
+.outcome-bar__seg--andamento {
+  background: var(--c-blue-400);
+}
+
+/* --- Texto-insight --- */
+.supplier-card__insight {
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+.supplier-card__insight strong {
+  color: var(--color-text-brand);
+  font-weight: var(--weight-bold);
+}
+
+
+/* --- Histórico de F4's -----------------------------------------------------
+   A lista rola dentro do card: no design o card tem altura fixa e a lista
+   passa por baixo da borda inferior. tabindex=0 no container para que a
+   rolagem seja alcançável pelo teclado. */
+.supplier-history {
+  max-height: 520px;
+  overflow-y: auto;
+  border-top: 1px solid var(--color-border);
+}
+.supplier-history:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+.supplier-history .attention__row:first-child {
+  border-top: 0;
+}
+
+@media (max-width: 720px) {
+  .supplier-grid {
+    grid-template-columns: 1fr;
+  }
+}

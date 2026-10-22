@@ -14,6 +14,10 @@
 @import "./components/tabs.css";
 @import "./components/chart.css";
 @import "./components/f4-detail.css";
+@import "./components/f4-version.css";
+@import "./components/form-f4.css";
+@import "./components/project.css";
+@import "./components/supplier.css";
 @import "./components/modal.css";
 @import "./components/export.css";
 

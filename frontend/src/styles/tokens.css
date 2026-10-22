@@ -49,6 +49,26 @@
   --c-red-500: #fb131b;
   --c-red-700: #981621;
 
+  /* superfícies e tintas medidas nas telas novas (out/26) */
+  --c-lavender-200: #d9c4ff; /* coluna de rótulo da matriz de versões */
+  --c-lavender-100: #ede8f6; /* fundo do rail de fluxo da F4 */
+  --c-tile-purple: #f6f3fa;
+  --c-tile-orange: #fff0e6;
+  --c-tile-green: #eefaea;
+  --c-tile-yellow: #fffde6;
+  --c-gray-25: #f9f9f9; /* célula de valor em tabela de comparação */
+  --c-gray-35: #f1f1f1; /* cabeçalho de versão inativa */
+  --c-gray-45: #f7f7f7; /* fundo de textarea */
+  --c-green-600: #12833b; /* barra "Distribuição de resultado" */
+  --c-red-600: #d42a2a;
+  --c-amber-500: #ffcc00; /* KPI "Diferença $" */
+
+  /* cores das etapas do fluxo da F4 (TD3/Fluxo F4.png) */
+  --stage-supplier: var(--c-orange-500);
+  --stage-technical: var(--c-blue-400);
+  --stage-commercial: var(--c-teal-300);
+  --stage-final: var(--c-purple-300);
+
   /* --- Nível 2: semânticos — é isto que os componentes usam ---------------- */
   --color-bg-app: var(--c-gray-100);
   --color-bg-auth: var(--c-purple-900);
@@ -81,9 +101,11 @@
      abaixo do mínimo de 4,5:1 para texto pequeno. Estes tons são os mesmos
      matizes escurecidos até passar. Para voltar ao literal do style-guide,
      troque as três linhas abaixo pelas cores originais (comentadas). */
-  --badge-fg-green: #2d7b17;  /* style-guide: var(--c-green-700) #399C1D */
-  --badge-fg-orange: #bc480a; /* style-guide: var(--c-orange-600) #E8590C */
+  --badge-fg-green: #2d7b17;  /* literal #399C1D reprovaria com 2,97:1 */
+  --badge-fg-orange: #8a3e0a; /* literal do design (balão de devolução) — 6,67:1 */
   --badge-fg-teal: #1b7c74;
+  /* o âmbar do KPI "Diferença $" dá 1,47:1 sobre o próprio tile — ilegível */
+  --badge-fg-amber: #8c7000;
 
   /* --- Gradientes ---------------------------------------------------------- */
   --gradient-brand: linear-gradient(266.51deg, #2307af 2.26%, #8467ad 104.26%);
@@ -107,6 +129,7 @@
 
   /* --- Raios --------------------------------------------------------------- */
   --radius-sm: 6px;
+  --radius-nav: 5px; /* valor escrito no style-guide para o item de navegação */
   --radius-md: 12px;
   --radius-lg: 16px; /* padrão dos cards */
   --radius-xl: 24px;
@@ -127,6 +150,8 @@
   /* --- Tipografia — Poppins (títulos) + Lato (corpo e números) ------------- */
   --font-display: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-body: "Lato", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* o design renderiza part numbers, códigos de F4 e datas em monoespaçada */
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Roboto Mono", monospace;
 
   --text-xs: 12px;
   --text-sm: 14px;
@@ -144,12 +169,12 @@
   --weight-black: 900;
 
   /* --- Layout -------------------------------------------------------------- */
-  --sidebar-w: 300px;
+  --sidebar-w: 391px; /* medido nos frames 1920 do design */
   --content-max: 1360px;
   --content-pad: 48px;
   --control-h: 48px;
   --control-h-lg: 56px;
-  --row-h: 68px;
+  --row-h: 80px;
   --auth-card-w: 505px;
 
   /* --- Empilhamento -------------------------------------------------------- */

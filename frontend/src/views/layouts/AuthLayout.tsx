@@ -7,7 +7,7 @@ export default function AuthLayout() {
     <div className="auth-layout">
       <AuthBackdrop />
       <div className="auth-layout__brand">
-        <BrandLockup size="lg" />
+        <BrandLockup mark="unna" size="lg" />
       </div>
       <main className="auth-layout__slot">
         <Outlet />
